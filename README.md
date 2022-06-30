@@ -9,3 +9,9 @@ Some of its features include:
 - various implementations for diversify algorithms and models.
 - benchmarks for comparing and further analysis.
 - hyperparameter optimization based on [Optuna](https://github.com/optuna/optuna).
+
+## For developers
+make sure you have `pre-commit` installed:
+```
+pip install pre-commit
+```
