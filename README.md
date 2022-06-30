@@ -14,4 +14,5 @@ Some of its features include:
 make sure you have `pre-commit` installed:
 ```
 pip install pre-commit
+pre-commit install
 ```
