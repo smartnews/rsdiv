@@ -25,4 +25,8 @@ repos:
   - repo: https://github.com/psf/black
     rev: 22.6.0
     hooks:
+<<<<<<< HEAD
       - id: black
+=======
+      - id: black
+>>>>>>> 98eaa55 (add workflow files)
