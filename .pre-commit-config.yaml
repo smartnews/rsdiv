@@ -26,7 +26,11 @@ repos:
     rev: 22.6.0
     hooks:
 <<<<<<< HEAD
+<<<<<<< HEAD
       - id: black
 =======
       - id: black
 >>>>>>> 98eaa55 (add workflow files)
+=======
+      - id: black
+>>>>>>> ce41081 (fix end of files)

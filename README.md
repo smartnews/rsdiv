@@ -9,6 +9,7 @@ Some of its features include:
 - various implementations for diversify algorithms and models.
 - benchmarks for comparing and further analysis.
 - hyperparameter optimization based on [Optuna](https://github.com/optuna/optuna).
+<<<<<<< HEAD
 
 ## For developers
 make sure you have `pre-commit` installed:
@@ -16,3 +17,5 @@ make sure you have `pre-commit` installed:
 pip install pre-commit
 pre-commit install
 ```
+=======
+>>>>>>> ce41081 (fix end of files)

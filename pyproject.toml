@@ -13,7 +13,11 @@ include_trailing_comma = true
 line_length = 88
 multi_line_output = 3
 <<<<<<< HEAD
+<<<<<<< HEAD
 use_parentheses = true
 =======
 use_parentheses = true
 >>>>>>> 98eaa55 (add workflow files)
+=======
+use_parentheses = true
+>>>>>>> ce41081 (fix end of files)
