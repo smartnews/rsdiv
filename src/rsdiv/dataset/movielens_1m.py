@@ -6,7 +6,7 @@ from .base import BaseDownloader
 
 
 class MovieLens1MDownLoader(BaseDownloader):
-    URL: str = "http://files.grouplens.org/datasets/movielens/ml-1m.zip"
+    DOWNLOAD_URL: str = "http://files.grouplens.org/datasets/movielens/ml-1m.zip"
 
     def read_ratings(self) -> pd.DataFrame:
         ratings_path: str = os.path.join(self.DEFAULT_PATH, "ml-1m/ratings.dat")
