@@ -1,8 +1,8 @@
 import os
+import zipfile
 from abc import ABCMeta
 from typing import Optional
 from urllib.request import urlretrieve
-import zipfile
 
 
 class BaseDownloader(metaclass=ABCMeta):
@@ -15,8 +15,8 @@ class BaseDownloader(metaclass=ABCMeta):
             self.zip_path = zip_path
 
     def _retrieve(self, url: str) -> None:
-        file_name: str = os.path.join(self.zip_path, url.split('/')[-1]) 
-        urlretrieve(url, filename = file_name)
+        file_name: str = os.path.join(self.zip_path, url.split("/")[-1])
+        urlretrieve(url, filename=file_name)
         with zipfile.ZipFile(file_name) as zf:
             zf.extractall()
         os.remove(file_name)
