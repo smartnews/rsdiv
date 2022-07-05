@@ -13,7 +13,7 @@ class DiversityMetrics:
         if isinstance(next(iter(items)), Sequence):
             items = chain(*items)
         flatten_items = list(items)
-        return pd.Series(flatten_items).value_counts().to_numpy()
+        return np.asarray(pd.Series(flatten_items).value_counts())
 
     @staticmethod
     def _gini_coefficient(categories_histogram: np.ndarray, sort: bool = True) -> float:
