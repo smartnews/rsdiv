@@ -1,5 +1,6 @@
 # Rsdiv: Diversity improvement framework for recommender systems
 [![Python](https://img.shields.io/badge/python-3.6%7C3.7%7C3.8%7C3.9-red?logo=Python&logoColor=white)](https://www.python.org)
+[![PyPI](https://img.shields.io/pypi/v/rsdiv?color=green)](https://pypi.org/project/rsdiv/)
 [![GitHub](https://img.shields.io/github/license/yuanlonghao/reranking?color=blue)](https://github.com/smartnews/rsdiv)
 
 **rsdiv** is a Python package for recommender systems to provide the measurements and improvements for the diversity of results.
@@ -11,15 +12,26 @@ Some of its features include:
 - benchmarks for comparing and further analysis.
 - hyperparameter optimization based on [Optuna](https://github.com/optuna/optuna).
 
+## Installation
+You can simply install the pre-build binaries with:
+```
+$ pip install rsdiv
+```
+Or you may want to build from source:
+```
+$ cd rsdiv
+$ pip install .
+```
 ## Basic Usage
 ### Prepare for a benchmark dataset
 Load a benchmark, say, [MovieLens 1M Dataset](https://grouplens.org/datasets/movielens/1m/). This is a table benchmark dataset which contains 1 million ratings from 6000 users on 4000 movies.
 ```
-data_loader = MovieLens1MDownLoader()
+>>> from rsdiv import MovieLens1MDownLoader
+>>> data_loader = MovieLens1MDownLoader()
 ```
 Get the user-item interactions (ratings):
 ```
-ratings = downloader.read_ratings()
+>>> ratings = downloader.read_ratings()
 ```
 |    |   userId |   movieId |   rating | timestamp           |
 |---:|---------:|----------:|---------:|:--------------------|
@@ -31,7 +43,7 @@ ratings = downloader.read_ratings()
 
 Get the users' infomation:
 ```
-users = downloader.read_users()
+>>> users = downloader.read_users()
 ```
 |    |   userId | gender   |   age |   occupation |   zipcode |
 |---:|---------:|:---------|------:|-------------:|----------:|
@@ -43,7 +55,7 @@ users = downloader.read_users()
 
 Get the items' information:
 ```
-movies = downloader.read_movies()
+>>> movies = downloader.read_movies()
 ```
 |    |   movieId | title      | genres      |   year |
 |---:|----------:|:--------------|:-------|-------:|
@@ -56,18 +68,24 @@ movies = downloader.read_movies()
 ### Evaluate the results in various aspects
 Load the evaluator to analyse the results, say, [Gini coefficient](https://en.wikipedia.org/wiki/Gini_coefficient) metric:
 ```
-metrics = DiversityMetrics()
-metrics.gini_coefficient(ratings['movieId'])
+>>> from rsdiv import DiversityMetrics
+>>> metrics = DiversityMetrics()
+>>> metrics.gini_coefficient(ratings['movieId'])
 
 >>> 0.6335616301416965
 ```
 The nested input type (`List[List[str]]`-like) is also favorable. This especially usful to evaluate the diversity on topic-scale:
 ```
-metrics.gini_coefficient(movies['genres'])
+>>> metrics.gini_coefficient(movies['genres'])
 
 >>> 0.5158655846858095
 ```
 
+### Train a recommender
+TODO.
+
+### Improve the diversity
+TODO.
 
 ## For developers
 Make sure you have `pre-commit` installed:
