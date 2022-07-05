@@ -26,8 +26,8 @@ $ pip install .
 ### Prepare for a benchmark dataset
 Load a benchmark, say, [MovieLens 1M Dataset](https://grouplens.org/datasets/movielens/1m/). This is a table benchmark dataset which contains 1 million ratings from 6000 users on 4000 movies.
 ```
->>> from rsdiv import MovieLens1MDownLoader
->>> data_loader = MovieLens1MDownLoader()
+>>> import rsdiv as rs
+>>> data_loader = rs.MovieLens1MDownLoader()
 ```
 Get the user-item interactions (ratings):
 ```
@@ -68,18 +68,24 @@ Get the items' information:
 ### Evaluate the results in various aspects
 Load the evaluator to analyse the results, say, [Gini coefficient](https://en.wikipedia.org/wiki/Gini_coefficient) metric:
 ```
->>> from rsdiv import DiversityMetrics
->>> metrics = DiversityMetrics()
+>>> metrics = rs.DiversityMetrics()
 >>> metrics.gini_coefficient(ratings['movieId'])
 
 >>> 0.6335616301416965
 ```
-The nested input type (`List[List[str]]`-like) is also favorable. This especially usful to evaluate the diversity on topic-scale:
+The nested input type (`List[List[str]]`-like) is also favorable. This is especially usful to evaluate the diversity on topic-scale:
 ```
 >>> metrics.gini_coefficient(movies['genres'])
 
 >>> 0.5158655846858095
 ```
+
+### Draw a Lorenz curve graph for insights
+[Lorenz curve](https://en.wikipedia.org/wiki/Lorenz_curve) is a graphical representation of the distribution, the cumulative proportion of species is plotted against the cumulative proportion of individuals. This feature is also supported by **rsdiv** for helping practitioners' analysis.
+```
+metrics.get_lorenz_curve(ratings['movieId'])
+```
+![Lorenz](pics/Lorenz.png)
 
 ### Train a recommender
 TODO.
