@@ -19,15 +19,14 @@ $ pip install rsdiv
 ```
 Or you may want to build from source:
 ```
-$ cd rsdiv
-$ pip install .
+$ cd rsdiv && pip install .
 ```
 ## Basic Usage
 ### Prepare for a benchmark dataset
 Load a benchmark, say, [MovieLens 1M Dataset](https://grouplens.org/datasets/movielens/1m/). This is a table benchmark dataset which contains 1 million ratings from 6000 users on 4000 movies.
 ```
 >>> import rsdiv as rs
->>> data_loader = rs.MovieLens1MDownLoader()
+>>> downloader = rs.MovieLens1MDownLoader()
 ```
 Get the user-item interactions (ratings):
 ```
@@ -55,9 +54,9 @@ Get the users' infomation:
 
 Get the items' information:
 ```
->>> movies = downloader.read_movies()
+>>> movies = downloader.read_items()
 ```
-|    |   movieId | title      | genres      |   year |
+|    |   movieId | title      | genres      |   release_date |
 |---:|----------:|:--------------|:-------|-------:|
 |  0 |         1 | Toy Story   | [\'Animation\', "Children\'s", \'Comedy\']  |   1995 |
 |  1 |         2 | Jumanji      | [\'Adventure\', "Children\'s", \'Fantasy\'] |   1995 |
@@ -79,6 +78,8 @@ The nested input type (`List[List[str]]`-like) is also favorable. This is especi
 
 >>> 0.5158655846858095
 ```
+
+[Shannon Index](https://en.wikipedia.org/wiki/Diversity_index#Shannon_index) and [Effective Catalog Size](https://www.businessinsider.com/how-netflix-recommendations-work-2016-9) are also available with same usage.
 
 ### Draw a Lorenz curve graph for insights
 [Lorenz curve](https://en.wikipedia.org/wiki/Lorenz_curve) is a graphical representation of the distribution, the cumulative proportion of species is plotted against the cumulative proportion of individuals. This feature is also supported by **rsdiv** for helping practitioners' analysis.
