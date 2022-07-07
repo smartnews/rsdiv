@@ -1,9 +1,10 @@
 from itertools import chain
-from typing import Hashable, Iterable, Sequence, Union
+from typing import Hashable, Iterable, Optional, Sequence, Union
 
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+from scipy.stats import entropy
 
 
 class DiversityMetrics:
@@ -48,6 +49,15 @@ class DiversityMetrics:
         cls, items: Union[Iterable[Hashable], Iterable[Sequence[Hashable]]]
     ) -> float:
         return cls._effective_catalog_size(cls._get_histogram(items))
+
+    @classmethod
+    def shannon_index(
+        cls,
+        items: Union[Iterable[Hashable], Iterable[Sequence[Hashable]]],
+        base: Optional[float] = None,
+    ) -> float:
+        ent: float = entropy(cls._get_histogram(items), base=base)
+        return ent
 
     @classmethod
     def get_lorenz_curve(

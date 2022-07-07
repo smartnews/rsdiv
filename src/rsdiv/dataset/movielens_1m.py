@@ -30,9 +30,9 @@ class MovieLens1MDownLoader(BaseDownloader):
 
         return df_users
 
-    def read_movies(self) -> pd.DataFrame:
+    def read_items(self) -> pd.DataFrame:
         movies_path: str = os.path.join(self.DEFAULT_PATH, "ml-1m/movies.dat")
-        df_movies: pd.DataFrame = pd.read_csv(
+        df_items: pd.DataFrame = pd.read_csv(
             movies_path,
             sep="::",
             header=None,
@@ -40,8 +40,8 @@ class MovieLens1MDownLoader(BaseDownloader):
             engine="python",
             names=["movieId", "title", "genres"],
         )
-        df_movies["year"] = df_movies["title"].str[-5:-1].astype("int")
-        df_movies["title"] = df_movies["title"].str[:-7]
-        df_movies["genres"] = df_movies["genres"].apply(lambda x: x.split("|"))
+        df_items["release_date"] = df_items["title"].str[-5:-1].astype("int")
+        df_items["title"] = df_items["title"].str[:-7]
+        df_items["genres"] = df_items["genres"].apply(lambda x: x.split("|"))
 
-        return df_movies
+        return df_items
