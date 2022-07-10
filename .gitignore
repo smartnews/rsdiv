@@ -1,0 +1,4 @@
+.DS_Store
+build/*
+dist/*
+src/rsdiv.egg-info/*
