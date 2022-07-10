@@ -7,9 +7,10 @@ from .base import BaseDownloader
 
 class MovieLens1MDownLoader(BaseDownloader):
     DOWNLOAD_URL: str = "http://files.grouplens.org/datasets/movielens/ml-1m.zip"
+    DEFAULT_PATH: str = os.path.join(os.getcwd(), "ml-1m")
 
     def read_ratings(self) -> pd.DataFrame:
-        ratings_path: str = os.path.join(self.DEFAULT_PATH, "ml-1m/ratings.dat")
+        ratings_path: str = os.path.join(self.DEFAULT_PATH, "ratings.dat")
         df_ratings: pd.DataFrame = pd.read_csv(
             ratings_path, sep="::", header=None, engine="python"
         ).copy()
@@ -19,7 +20,7 @@ class MovieLens1MDownLoader(BaseDownloader):
         return df_ratings
 
     def read_users(self) -> pd.DataFrame:
-        users_path: str = os.path.join(self.DEFAULT_PATH, "ml-1m/users.dat")
+        users_path: str = os.path.join(self.DEFAULT_PATH, "users.dat")
         df_users: pd.DataFrame = pd.read_csv(
             users_path,
             sep="::",
@@ -31,7 +32,7 @@ class MovieLens1MDownLoader(BaseDownloader):
         return df_users
 
     def read_items(self) -> pd.DataFrame:
-        movies_path: str = os.path.join(self.DEFAULT_PATH, "ml-1m/movies.dat")
+        movies_path: str = os.path.join(self.DEFAULT_PATH, "movies.dat")
         df_items: pd.DataFrame = pd.read_csv(
             movies_path,
             sep="::",
