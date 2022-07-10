@@ -26,11 +26,11 @@ $ cd rsdiv && pip install .
 Load a benchmark, say, [MovieLens 1M Dataset](https://grouplens.org/datasets/movielens/1m/). This is a table benchmark dataset which contains 1 million ratings from 6000 users on 4000 movies.
 ```
 >>> import rsdiv as rs
->>> downloader = rs.MovieLens1MDownLoader()
+>>> loader = rs.MovieLens1MDownLoader()
 ```
 Get the user-item interactions (ratings):
 ```
->>> ratings = downloader.read_ratings()
+>>> ratings = loader.read_ratings()
 ```
 |    |   userId |   movieId |   rating | timestamp           |
 |---:|---------:|----------:|---------:|:--------------------|
@@ -42,7 +42,7 @@ Get the user-item interactions (ratings):
 
 Get the users' infomation:
 ```
->>> users = downloader.read_users()
+>>> users = loader.read_users()
 ```
 |    |   userId | gender   |   age |   occupation |   zipcode |
 |---:|---------:|:---------|------:|-------------:|----------:|
@@ -54,7 +54,7 @@ Get the users' infomation:
 
 Get the items' information:
 ```
->>> movies = downloader.read_items()
+>>> movies = loader.read_items()
 ```
 |    |   movieId | title      | genres      |   release_date |
 |---:|----------:|:--------------|:-------|-------:|
