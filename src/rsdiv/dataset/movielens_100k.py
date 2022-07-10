@@ -8,9 +8,10 @@ from .base import BaseDownloader
 
 class MovieLens100KDownLoader(BaseDownloader):
     DOWNLOAD_URL: str = "http://files.grouplens.org/datasets/movielens/ml-100k.zip"
+    DEFAULT_PATH: str = os.path.join(os.getcwd(), "ml-100k")
 
     def read_ratings(self) -> pd.DataFrame:
-        ratings_path: str = os.path.join(self.DEFAULT_PATH, "ml-100k/u.data")
+        ratings_path: str = os.path.join(self.DEFAULT_PATH, "u.data")
         df_ratings: pd.DataFrame = pd.read_csv(
             ratings_path, sep="\t", header=None, engine="python"
         ).copy()
@@ -20,7 +21,7 @@ class MovieLens100KDownLoader(BaseDownloader):
         return df_ratings
 
     def read_users(self) -> pd.DataFrame:
-        users_path: str = os.path.join(self.DEFAULT_PATH, "ml-100k/u.user")
+        users_path: str = os.path.join(self.DEFAULT_PATH, "u.user")
         df_users: pd.DataFrame = pd.read_csv(
             users_path,
             sep="|",
@@ -38,7 +39,7 @@ class MovieLens100KDownLoader(BaseDownloader):
             return [pair.split("|")[0] for pair in genres.split("\n")][:-2]
 
     def read_items(self) -> pd.DataFrame:
-        movies_path: str = os.path.join(self.DEFAULT_PATH, "ml-100k/u.item")
+        movies_path: str = os.path.join(self.DEFAULT_PATH, "u.item")
         genres: List[str] = self._read_genres()
         df_items: pd.DataFrame = pd.read_csv(
             movies_path,
