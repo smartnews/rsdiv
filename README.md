@@ -69,13 +69,11 @@ Load the evaluator to analyse the results, say, [Gini coefficient](https://en.wi
 ```
 >>> metrics = rs.DiversityMetrics()
 >>> metrics.gini_coefficient(ratings['movieId'])
-
 >>> 0.6335616301416965
 ```
 The nested input type (`List[List[str]]`-like) is also favorable. This is especially usful to evaluate the diversity on topic-scale:
 ```
 >>> metrics.gini_coefficient(movies['genres'])
-
 >>> 0.5158655846858095
 ```
 
@@ -89,8 +87,19 @@ metrics.get_lorenz_curve(ratings['movieId'])
 ![Lorenz](pics/Lorenz.png)
 
 ### Train a recommender
-TODO.
-
+**rsdiv** provides various implementations of core recommender algorithms. To start with, a wrapper for `LightFM` is also supported:
+```
+>>> fm = rs.FMRecommender(ratings, 0.3).fit()
+```
+30% of interactions are split for test set, the precision at top 5 can be calculated with:
+```
+>>> fm.precision_at_top_k(5)
+>>> 0.14464477
+```
+the prediction scores for pairs can be access with:
+```
+>>> fm.predict(user_ids: np.ndarray, item_ids: np.ndarray)
+```
 ### Improve the diversity
 TODO.
 

@@ -16,7 +16,7 @@ class FMRecommender(BaseRecommender):
         super().__init__(interaction, test_size)
         self.fm = LightFM(
             no_components=10,
-            loss="warp",
+            loss="bpr",
             random_state=42,
         )
 
