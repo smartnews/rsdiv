@@ -68,12 +68,12 @@ Get the items' information:
 Load the evaluator to analyse the results, say, [Gini coefficient](https://en.wikipedia.org/wiki/Gini_coefficient) metric:
 ```
 >>> metrics = rs.DiversityMetrics()
->>> metrics.gini_coefficient(ratings['movieId'])
+>>> metrics.gini_coefficient(ratings['itemId'])
 >>> 0.6335616301416965
 ```
 The nested input type (`List[List[str]]`-like) is also favorable. This is especially usful to evaluate the diversity on topic-scale:
 ```
->>> metrics.gini_coefficient(movies['genres'])
+>>> metrics.gini_coefficient(items['genres'])
 >>> 0.5158655846858095
 ```
 
@@ -82,7 +82,7 @@ The nested input type (`List[List[str]]`-like) is also favorable. This is especi
 ### Draw a Lorenz curve graph for insights
 [Lorenz curve](https://en.wikipedia.org/wiki/Lorenz_curve) is a graphical representation of the distribution, the cumulative proportion of species is plotted against the cumulative proportion of individuals. This feature is also supported by **rsdiv** for helping practitioners' analysis.
 ```
-metrics.get_lorenz_curve(ratings['movieId'])
+metrics.get_lorenz_curve(ratings['itemId'])
 ```
 ![Lorenz](pics/Lorenz.png)
 
@@ -91,21 +91,24 @@ metrics.get_lorenz_curve(ratings['movieId'])
 ```
 >>> rc = rs.FMRecommender(ratings, 0.3).fit()
 ```
-30% of interactions are split for test set, the precision at top 5 can be calculated with:
+30% of interactions are split for test set, the precision at `top 5` can be calculated with:
 ```
 >>> rc.precision_at_top_k(5)
 >>> 0.14464477
 ```
-the prediction scores for a given user on each item can be access with (the results with seen items removed can be calculated by `predict_for_userId_unseen`):
+the `top 100` unseen recommended items for an arbitrary user, say `userId: 1024`, can be simply given by:
 ```
->>> rc.predict_for_userId(42)
->>> array([-3.0786333, -2.8600938, -5.5952744, ..., -5.9792733, -7.8316765, -6.2370725], dtype=float32)
+>>> rc.predict_top_n_item(1024, 100)
 ```
-the scores of top `5` recommended items for the `userId: 1024` are given by:
-```
->>> rc.predict_top_n_unseen(1024, 5)
->>> {1296: 1.7469575, 916: 1.773555, 915: 1.63063, 2067: 1.3016684, 28: 1.2860104}
-```
+
+|    |   itemId |   scores | title                                   | genres                                          |   release_date |
+|---:|------:|---------:|:-----------|:-----------|---------------:|
+|  0 |      916 | 1.77356  | Roman Holiday                           | [\'Comedy\', \'Romance\']                           |           1953 |
+|  1 |     1296 | 1.74696  | Room with a View                        | [\'Drama\', \'Romance\']                            |           1986 |
+|  ... |     ... | ...  | ...       | ...                |       ... |
+|  98 |     3079 | 0.371897  | Mansfield Park                        | [\'Drama\']                            |           1999 |
+|  99 |     2570 | 0.369199  | Walk on the Moon	                     | [\'Drama\', \'Romance\']                            |           1999 |
+
 ### Improve the diversity
 TODO.
 

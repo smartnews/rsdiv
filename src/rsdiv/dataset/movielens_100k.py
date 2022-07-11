@@ -47,10 +47,11 @@ class MovieLens100KDownLoader(BaseDownloader):
             header=None,
             encoding="latin-1",
             engine="python",
-            names=["movieId", "title", "release_date", "video_release_date", "URL"]
+            names=["itemId", "title", "release_date", "video_release_date", "URL"]
             + genres,
         )
         df_items["title"] = df_items["title"].str[:-7]
+        df_items["title"] = df_items["title"].apply(lambda x: x.split(",")[0])
         df_items["release_date"] = pd.to_datetime(df_items.release_date)
         df_items["genres"] = df_items[genres].dot(df_items[genres].columns + "|")
         df_items["genres"] = df_items["genres"].apply(lambda x: x[:-1].split("|"))

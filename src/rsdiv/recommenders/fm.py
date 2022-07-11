@@ -11,9 +11,12 @@ from .base import BaseRecommender
 
 class FMRecommender(BaseRecommender):
     def __init__(
-        self, interaction: pd.DataFrame, test_size: Optional[float] = None
+        self,
+        interaction: pd.DataFrame,
+        items: pd.DataFrame,
+        test_size: Optional[float] = None,
     ) -> None:
-        super().__init__(interaction, test_size)
+        super().__init__(interaction, items, test_size)
         self.fm = LightFM(
             no_components=10,
             loss="bpr",
