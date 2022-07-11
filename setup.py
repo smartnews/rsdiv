@@ -10,7 +10,7 @@ with (SETUP_DIRECTORY / "README.md").open() as ifs:
 
 setup(
     name="rsdiv",
-    version="0.1.3",
+    version="0.1.4",
     author="Yin Cheng",
     author_email="yin.sjtu@gmail.com",
     long_description=LONG_DESCRIPTION,

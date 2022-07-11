@@ -101,7 +101,7 @@ the prediction scores for a given user on each item can be access with (the resu
 >>> rc.predict_for_userId(42)
 >>> array([-3.0786333, -2.8600938, -5.5952744, ..., -5.9792733, -7.8316765, -6.2370725], dtype=float32)
 ```
-the recommended items with the predicted scores are given by:
+the scores of top `5` recommended items for the `userId: 1024` are given by:
 ```
 >>> rc.predict_top_n_unseen(1024, 5)
 >>> {1296: 1.7469575, 916: 1.773555, 915: 1.63063, 2067: 1.3016684, 28: 1.2860104}
