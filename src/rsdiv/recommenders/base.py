@@ -16,16 +16,26 @@ class BaseRecommender(metaclass=ABCMeta):
     test_size: Optional[float]
 
     def __init__(
-        self, df_interaction: pd.DataFrame, test_size: Optional[float]
+        self,
+        df_interaction: pd.DataFrame,
+        user_features: Optional[pd.DataFrame] = None,
+        item_features: Optional[pd.DataFrame] = None,
+        test_size: Optional[float] = None,
     ) -> None:
         self.n_users, self.n_items = df_interaction.max()[:2]
-        self.df_interaction = df_interaction
+        self.df_interaction = self.get_interaction(df_interaction)
+        self.user_features = user_features
+        self.item_features = item_features
         self.test_size = test_size
         self.train_mat, self.test_mat = self.process_interaction()
 
-    def process_interaction(self) -> Tuple[sps.coo_matrix, sps.coo_matrix]:
-        dataframe = self.df_interaction.iloc[:, :3]
+    def get_interaction(self, df_interaction: pd.DataFrame) -> pd.DataFrame:
+        dataframe = df_interaction.iloc[:, :3]
         dataframe.columns = ["userId", "itemId", "interaction"]
+        return dataframe
+
+    def process_interaction(self) -> Tuple[sps.coo_matrix, sps.coo_matrix]:
+        dataframe = self.df_interaction
         train, test = train_test_split(
             dataframe, test_size=self.test_size, random_state=42
         )
@@ -58,3 +68,19 @@ class BaseRecommender(metaclass=ABCMeta):
         item_features: Optional[sps.csr_matrix],
     ) -> np.ndarray:
         raise NotImplementedError("predict must be implemented.")
+
+    def predict_for_userId(self, user_id: int) -> np.ndarray:
+        user_ids: np.ndarray = np.full(self.n_items, user_id - 1)
+        item_ids: np.ndarray = np.arange(self.n_items)
+        predicton = self.predict(
+            user_ids, item_ids, self.user_features, self.item_features
+        )
+        return predicton
+
+    def predict_for_userId_unseen(self, user_id: int) -> np.ndarray:
+        seen = (
+            self.df_interaction[self.df_interaction["userId"] == user_id]["itemId"] - 1
+        )
+        predicton = self.predict_for_userId(user_id)
+        predicton[seen] = -np.inf
+        return predicton
