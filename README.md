@@ -96,9 +96,10 @@ metrics.get_lorenz_curve(ratings['movieId'])
 >>> fm.precision_at_top_k(5)
 >>> 0.14464477
 ```
-the prediction scores for pairs can be access with:
+the prediction scores for a given user on each item can be access with:
 ```
->>> fm.predict(user_ids: np.ndarray, item_ids: np.ndarray)
+>>> fm.predict_for_userId(42)
+>>> array([-3.0786333, -2.8600938, -5.5952744, ..., -5.9792733, -7.8316765, -6.2370725], dtype=float32)
 ```
 ### Improve the diversity
 TODO.

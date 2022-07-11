@@ -35,6 +35,11 @@ class FMRecommender(BaseRecommender):
         )
         return prediction
 
+    def predict_for_userId(self, user_id: int) -> np.ndarray:
+        user_ids: np.ndarray = np.full(self.n_items, user_id - 1)
+        item_ids: np.ndarray = np.arange(self.n_items)
+        return self.predict(user_ids, item_ids)
+
     def precision_at_top_k(self, top_k: int = 5) -> float:
         precision: float = precision_at_k(self.fm, self.test_mat, k=top_k).mean()
         return precision
