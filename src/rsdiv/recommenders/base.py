@@ -11,6 +11,7 @@ R = TypeVar("R", bound="BaseRecommender")
 
 class BaseRecommender(metaclass=ABCMeta):
     df_interaction: pd.DataFrame
+    items: pd.DataFrame
     user_features: Optional[pd.DataFrame]
     item_features: Optional[pd.DataFrame]
     test_size: Optional[float]
@@ -18,12 +19,14 @@ class BaseRecommender(metaclass=ABCMeta):
     def __init__(
         self,
         df_interaction: pd.DataFrame,
+        items: pd.DataFrame,
         user_features: Optional[pd.DataFrame] = None,
         item_features: Optional[pd.DataFrame] = None,
         test_size: Optional[float] = None,
     ) -> None:
         self.n_users, self.n_items = df_interaction.max()[:2]
         self.df_interaction = self.get_interaction(df_interaction)
+        self.items = items
         self.user_features = user_features
         self.item_features = item_features
         self.test_size = test_size
@@ -90,3 +93,12 @@ class BaseRecommender(metaclass=ABCMeta):
         argpartition = np.argpartition(-prediction, top_n)
         result_args = argpartition[:top_n]
         return {key + 1: prediction[key] for key in result_args}
+
+    def predict_top_n_item(self, user_id: int, top_n: int) -> pd.DataFrame:
+        prediction = self.predict_top_n_unseen(user_id, top_n)
+        candidates: pd.DataFrame = pd.DataFrame.from_dict(prediction.items())
+        candidates.columns = ["itemId", "scores"]
+        candidates = candidates.sort_values(
+            by="scores", ascending=False, ignore_index=True
+        )
+        return candidates.merge(self.items, how="left", on="itemId")
