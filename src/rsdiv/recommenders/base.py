@@ -1,5 +1,5 @@
 from abc import ABCMeta, abstractmethod
-from typing import Optional, Tuple, TypeVar
+from typing import Dict, Optional, Tuple, TypeVar
 
 import numpy as np
 import pandas as pd
@@ -84,3 +84,10 @@ class BaseRecommender(metaclass=ABCMeta):
         predicton = self.predict_for_userId(user_id)
         predicton[seen] = -np.inf
         return predicton
+
+    def predict_top_n_unseen(
+        self, prediction: np.ndarray, top_n: int
+    ) -> Dict[int, float]:
+        argpartition = np.argpartition(-prediction, top_n)
+        result_args = argpartition[:top_n]
+        return {key + 1: prediction[key] for key in result_args}
