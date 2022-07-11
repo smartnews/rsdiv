@@ -89,16 +89,22 @@ metrics.get_lorenz_curve(ratings['movieId'])
 ### Train a recommender
 **rsdiv** provides various implementations of core recommender algorithms. To start with, a wrapper for `LightFM` is also supported:
 ```
->>> fm = rs.FMRecommender(ratings, 0.3).fit()
+>>> rc = rs.FMRecommender(ratings, 0.3).fit()
 ```
 30% of interactions are split for test set, the precision at top 5 can be calculated with:
 ```
->>> fm.precision_at_top_k(5)
+>>> rc.precision_at_top_k(5)
 >>> 0.14464477
 ```
-the prediction scores for pairs can be access with:
+the prediction scores for a given user on each item can be access with (the results with seen items removed can be calculated by `predict_for_userId_unseen`):
 ```
->>> fm.predict(user_ids: np.ndarray, item_ids: np.ndarray)
+>>> rc.predict_for_userId(42)
+>>> array([-3.0786333, -2.8600938, -5.5952744, ..., -5.9792733, -7.8316765, -6.2370725], dtype=float32)
+```
+the recommended items with the predicted scores are given by:
+```
+>>> rc.predict_top_n_unseen(1024, 5)
+>>> {1296: 1.7469575, 916: 1.773555, 915: 1.63063, 2067: 1.3016684, 28: 1.2860104}
 ```
 ### Improve the diversity
 TODO.
