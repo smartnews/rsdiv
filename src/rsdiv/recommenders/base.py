@@ -85,9 +85,8 @@ class BaseRecommender(metaclass=ABCMeta):
         predicton[seen] = -np.inf
         return predicton
 
-    def predict_top_n_unseen(
-        self, prediction: np.ndarray, top_n: int
-    ) -> Dict[int, float]:
+    def predict_top_n_unseen(self, user_id: int, top_n: int) -> Dict[int, float]:
+        prediction = self.predict_for_userId_unseen(user_id)
         argpartition = np.argpartition(-prediction, top_n)
         result_args = argpartition[:top_n]
         return {key + 1: prediction[key] for key in result_args}
