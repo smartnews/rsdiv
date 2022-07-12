@@ -48,11 +48,15 @@ class _RelevanceMetricsBase(ABC):
 class CosineRelevanceMetric(_RelevanceMetricsBase):
     @staticmethod
     def get_similarity_scores(query: np.ndarray, candidates: np.ndarray) -> np.ndarray:
-        return (
+        return np.squeeze(
             query
             @ candidates.T
-            / np.linalg.norm(query, axis=1, keepdims=True)
-            / np.linalg.norm(candidates, axis=1, keepdims=True).T
+            / np.linalg.norm(
+                query, axis=0 if len(query.shape) == 1 else 1, keepdims=True
+            )
+            / np.linalg.norm(
+                candidates, axis=0 if len(candidates.shape) == 1 else 1, keepdims=True
+            ).T
         )
 
 
