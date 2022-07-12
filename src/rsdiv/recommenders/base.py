@@ -12,17 +12,17 @@ R = TypeVar("R", bound="BaseRecommender")
 class BaseRecommender(metaclass=ABCMeta):
     df_interaction: pd.DataFrame
     items: pd.DataFrame
+    test_size: Optional[float]
     user_features: Optional[pd.DataFrame]
     item_features: Optional[pd.DataFrame]
-    test_size: Optional[float]
 
     def __init__(
         self,
         df_interaction: pd.DataFrame,
         items: pd.DataFrame,
+        test_size: Optional[float],
         user_features: Optional[pd.DataFrame] = None,
         item_features: Optional[pd.DataFrame] = None,
-        test_size: Optional[float] = None,
     ) -> None:
         self.n_users, self.n_items = df_interaction.max()[:2]
         self.df_interaction = self.get_interaction(df_interaction)
@@ -42,6 +42,7 @@ class BaseRecommender(metaclass=ABCMeta):
         train, test = train_test_split(
             dataframe, test_size=self.test_size, random_state=42
         )
+        print(self.test_size, len(test))
         train_mat = sps.coo_matrix(
             (train.interaction, (train.userId - 1, train.itemId - 1)),
             (self.n_users, self.n_items),
