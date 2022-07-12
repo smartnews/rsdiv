@@ -11,7 +11,7 @@ class _RelevanceMetricsBase(ABC):
         pass
 
     @classmethod
-    def get_partition(
+    def _get_partition(
         cls,
         query: np.ndarray,
         candidates: np.ndarray,
@@ -36,13 +36,13 @@ class _RelevanceMetricsBase(ABC):
     def most_similar(
         cls, query: np.ndarray, candidates: np.ndarray, top: int = 10
     ) -> Tuple[np.ndarray, np.ndarray]:
-        return cls.get_partition(query, candidates, "most", top)
+        return cls._get_partition(query, candidates, "most", top)
 
     @classmethod
     def least_similar(
         cls, query: np.ndarray, candidates: np.ndarray, top: int = 10
     ) -> Tuple[np.ndarray, np.ndarray]:
-        return cls.get_partition(query, candidates, "least", top)
+        return cls._get_partition(query, candidates, "least", top)
 
 
 class CosineRelevanceMetric(_RelevanceMetricsBase):
