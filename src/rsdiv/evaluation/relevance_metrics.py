@@ -51,7 +51,7 @@ class CosineRelevanceMetric(_RelevanceMetricsBase):
         return (
             query
             @ candidates.T
-            / np.linalg.norm(query, axis=1)
+            / np.linalg.norm(query, axis=1, keepdims=True)
             / np.linalg.norm(candidates, axis=1, keepdims=True).T
         )
 
