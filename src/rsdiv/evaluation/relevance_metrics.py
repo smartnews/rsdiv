@@ -8,7 +8,7 @@ class RelevanceMetricsBase(ABC):
     @staticmethod
     @abstractmethod
     def get_similarity_scores(query: np.ndarray, candidates: np.ndarray) -> np.ndarray:
-        pass
+        raise NotImplementedError("get_similarity_scores must be implemented.")
 
     @classmethod
     def _get_partition(
