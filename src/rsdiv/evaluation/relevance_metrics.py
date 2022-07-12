@@ -4,7 +4,7 @@ from typing import Literal, Tuple
 import numpy as np
 
 
-class _RelevanceMetricsBase(ABC):
+class RelevanceMetricsBase(ABC):
     @staticmethod
     @abstractmethod
     def get_similarity_scores(query: np.ndarray, candidates: np.ndarray) -> np.ndarray:
@@ -45,7 +45,7 @@ class _RelevanceMetricsBase(ABC):
         return cls._get_partition(query, candidates, "least", top)
 
 
-class CosineRelevanceMetric(_RelevanceMetricsBase):
+class CosineRelevanceMetric(RelevanceMetricsBase):
     @staticmethod
     def get_similarity_scores(query: np.ndarray, candidates: np.ndarray) -> np.ndarray:
         return np.squeeze(
@@ -60,7 +60,7 @@ class CosineRelevanceMetric(_RelevanceMetricsBase):
         )
 
 
-class InnerProductRelevanceMetric(_RelevanceMetricsBase):
+class InnerProductRelevanceMetric(RelevanceMetricsBase):
     @staticmethod
     def get_similarity_scores(query: np.ndarray, candidates: np.ndarray) -> np.ndarray:
         return query @ candidates.T
