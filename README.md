@@ -89,7 +89,7 @@ metrics.get_lorenz_curve(ratings['itemId'])
 ### Train a recommender
 **rsdiv** provides various implementations of core recommender algorithms. To start with, a wrapper for `LightFM` is also supported:
 ```
->>> rc = rs.FMRecommender(ratings, 0.3).fit()
+>>> rc = rs.FMRecommender(ratings, items, 0.3).fit()
 ```
 30% of interactions are split for test set, the precision at `top 5` can be calculated with:
 ```

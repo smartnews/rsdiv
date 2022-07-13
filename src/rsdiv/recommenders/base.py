@@ -42,7 +42,6 @@ class BaseRecommender(metaclass=ABCMeta):
         train, test = train_test_split(
             dataframe, test_size=self.test_size, random_state=42
         )
-        print(self.test_size, len(test))
         train_mat = sps.coo_matrix(
             (train.interaction, (train.userId - 1, train.itemId - 1)),
             (self.n_users, self.n_items),
