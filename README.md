@@ -110,8 +110,12 @@ the `top 100` unseen recommended items for an arbitrary user, say `userId: 1024`
 |  99 |     2570 | 0.369199  | Walk on the Moon	                     | [\'Drama\', \'Romance\']                            |           1999 |
 
 ### Improve the diversity
-TODO.
-
+Not only for categorical labels, **rsdiv** also supports embedding for items, for example, the pretrained 300-dim embedding based on `wiki_en` by [**fastText**](https://fasttext.cc/) can be simply imported as:
+```
+>>> emb = rs.FastTextEmbedder()
+>>> emb.embedding_list(['Comedy', 'Romance'])
+>>> array([-0.02061814,  0.06264187,  0.00729847, -0.04322025,  0.04619966, ...])
+```
 ## For developers
 Make sure you have `pre-commit` installed:
 ```
