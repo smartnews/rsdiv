@@ -68,7 +68,7 @@ Get the items' information:
 Load the evaluator to analyse the results, say, [Gini coefficient](https://en.wikipedia.org/wiki/Gini_coefficient) metric:
 ```
 >>> metrics = rs.DiversityMetrics()
->>> metrics.gini_coefficient(ratings['itemId'])
+>>> metrics.gini_coefficient(ratings['movieId'])
 >>> 0.6335616301416965
 ```
 The nested input type (`List[List[str]]`-like) is also favorable. This is especially usful to evaluate the diversity on topic-scale:
@@ -82,7 +82,7 @@ The nested input type (`List[List[str]]`-like) is also favorable. This is especi
 ### Draw a Lorenz curve graph for insights
 [Lorenz curve](https://en.wikipedia.org/wiki/Lorenz_curve) is a graphical representation of the distribution, the cumulative proportion of species is plotted against the cumulative proportion of individuals. This feature is also supported by **rsdiv** for helping practitioners' analysis.
 ```
-metrics.get_lorenz_curve(ratings['itemId'])
+metrics.get_lorenz_curve(ratings['movieId'])
 ```
 ![Lorenz](pics/Lorenz.png)
 
@@ -94,7 +94,7 @@ metrics.get_lorenz_curve(ratings['itemId'])
 30% of interactions are split for test set, the precision at `top 5` can be calculated with:
 ```
 >>> rc.precision_at_top_k(5)
->>> 0.14464477
+>>> 0.15639074
 ```
 the `top 100` unseen recommended items for an arbitrary user, say `userId: 1024`, can be simply given by:
 ```
@@ -116,8 +116,19 @@ Not only for categorical labels, **rsdiv** also supports embedding for items, fo
 >>> emb.embedding_list(['Comedy', 'Romance'])
 >>> array([-0.02061814,  0.06264187,  0.00729847, -0.04322025,  0.04619966, ...])
 ```
+**TODO**
+- implement the Maximal Marginal Relevance, MMR diversify algorithm
+- implement the Bounded Greedy Selection Strategy, BGS diversify algorithm
+- implement the Determinantal Point Process, DPP diversify algorithm
+- implement the Modified Gram-Schmidt, MGS diversify algorithm
+### Hyperparameter optimization
+**TODO**
+- compatible with [Optuna](https://github.com/optuna/optuna).
+
 ## For developers
-Make sure you have `pre-commit` installed:
+Contributions welcome! Please contact us.
+
+During your development stage, make sure you have `pre-commit` installed in your local enviroment:
 ```
 pip install pre-commit
 pre-commit install
