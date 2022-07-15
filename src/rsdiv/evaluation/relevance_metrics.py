@@ -48,19 +48,23 @@ class RelevanceMetricsBase(ABC):
 class CosineRelevanceMetric(RelevanceMetricsBase):
     @staticmethod
     def get_similarity_scores(query: np.ndarray, candidates: np.ndarray) -> np.ndarray:
-        return np.squeeze(
-            query
-            @ candidates.T
-            / np.linalg.norm(
-                query, axis=0 if len(query.shape) == 1 else 1, keepdims=True
+        return np.asarray(
+            np.squeeze(
+                query
+                @ candidates.T
+                / np.linalg.norm(
+                    query, axis=0 if len(query.shape) == 1 else 1, keepdims=True
+                )
+                / np.linalg.norm(
+                    candidates,
+                    axis=0 if len(candidates.shape) == 1 else 1,
+                    keepdims=True,
+                ).T
             )
-            / np.linalg.norm(
-                candidates, axis=0 if len(candidates.shape) == 1 else 1, keepdims=True
-            ).T
         )
 
 
 class InnerProductRelevanceMetric(RelevanceMetricsBase):
     @staticmethod
     def get_similarity_scores(query: np.ndarray, candidates: np.ndarray) -> np.ndarray:
-        return query @ candidates.T
+        return np.asarray(query @ candidates.T)
