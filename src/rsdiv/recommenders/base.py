@@ -34,7 +34,7 @@ class BaseRecommender(metaclass=ABCMeta):
 
     def get_interaction(self, df_interaction: pd.DataFrame) -> pd.DataFrame:
         dataframe = df_interaction.iloc[:, :3]
-        dataframe.columns = ["userId", "itemId", "interaction"]
+        dataframe.columns = pd.Index(["userId", "itemId", "interaction"])
         return dataframe
 
     def process_interaction(self) -> Tuple[sps.coo_matrix, sps.coo_matrix]:
@@ -97,7 +97,7 @@ class BaseRecommender(metaclass=ABCMeta):
     def predict_top_n_item(self, user_id: int, top_n: int) -> pd.DataFrame:
         prediction = self.predict_top_n_unseen(user_id, top_n)
         candidates: pd.DataFrame = pd.DataFrame.from_dict(prediction.items())
-        candidates.columns = ["itemId", "scores"]
+        candidates.columns = pd.Index(["itemId", "scores"])
         candidates = candidates.sort_values(
             by="scores", ascending=False, ignore_index=True
         )

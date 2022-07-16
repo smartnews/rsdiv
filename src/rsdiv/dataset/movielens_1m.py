@@ -14,7 +14,7 @@ class MovieLens1MDownLoader(BaseDownloader):
         df_ratings: pd.DataFrame = pd.read_csv(
             ratings_path, sep="::", header=None, engine="python"
         ).copy()
-        df_ratings.columns = ["userId", "movieId", "rating", "timestamp"]
+        df_ratings.columns = pd.Index(["userId", "movieId", "rating", "timestamp"])
         df_ratings["timestamp"] = pd.to_datetime(df_ratings.timestamp, unit="s")
 
         return df_ratings
