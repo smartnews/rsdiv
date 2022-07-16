@@ -83,9 +83,11 @@ The nested input type (`List[List[str]]`-like) is also favorable. This is especi
 The unbalance of the data distribution can be well illustrated by both barplot and sorted dataframe:
 ```
 >>> distribution = metrics.get_distribution(items['genres'])
->>> distribution
 ```
 ![distribution](pics/distribution.png)
+```
+>>> distribution
+```
 |    | category    |   percentage |
 |---:|:------------|-------------:|
 |  0 | Drama       |   0.250156   |
