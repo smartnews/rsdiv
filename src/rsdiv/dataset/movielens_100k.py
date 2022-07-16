@@ -15,7 +15,7 @@ class MovieLens100KDownLoader(BaseDownloader):
         df_ratings: pd.DataFrame = pd.read_csv(
             ratings_path, sep="\t", header=None, engine="python"
         ).copy()
-        df_ratings.columns = ["userId", "movieId", "rating", "timestamp"]
+        df_ratings.columns = pd.Index(["userId", "movieId", "rating", "timestamp"])
         df_ratings["timestamp"] = pd.to_datetime(df_ratings.timestamp, unit="s")
 
         return df_ratings
@@ -33,7 +33,7 @@ class MovieLens100KDownLoader(BaseDownloader):
         return df_users[["userId", "gender", "age", "occupation", "zipcode"]]
 
     def _read_genres(self) -> List[str]:
-        genres_path: str = os.path.join(self.DEFAULT_PATH, "ml-100k/u.genre")
+        genres_path: str = os.path.join(self.DEFAULT_PATH, "u.genre")
         with open(genres_path, "r") as outfile:
             genres = outfile.read()
             return [pair.split("|")[0] for pair in genres.split("\n")][:-2]
@@ -53,8 +53,7 @@ class MovieLens100KDownLoader(BaseDownloader):
         df_items["title"] = df_items["title"].str[:-7]
         df_items["title"] = df_items["title"].apply(lambda x: x.split(",")[0])
         df_items["release_date"] = pd.to_datetime(df_items.release_date)
-        df_items["genres"] = df_items[genres].dot(df_items[genres].columns + "|")
+        df_items["genres"] = df_items[genres] @ (df_items[genres].columns + "|")
         df_items["genres"] = df_items["genres"].apply(lambda x: x[:-1].split("|"))
-
         df_items = df_items.drop(columns=genres + ["video_release_date", "URL"])
-        return df_items[["movieId", "title", "genres", "release_date"]]
+        return df_items[["itemId", "title", "genres", "release_date"]]
