@@ -79,6 +79,22 @@ The nested input type (`List[List[str]]`-like) is also favorable. This is especi
 
 [Shannon Index](https://en.wikipedia.org/wiki/Diversity_index#Shannon_index) and [Effective Catalog Size](https://www.businessinsider.com/how-netflix-recommendations-work-2016-9) are also available with same usage.
 
+### Show the distribution of a given data source
+The unbalance of the data distribution can be well illustrated by both barplot and sorted dataframe:
+```
+>>> distribution = metrics.get_distribution(items['genres'])
+>>> distribution
+```
+![distribution](pics/distribution.png)
+|    | category    |   percentage |
+|---:|:------------|-------------:|
+|  0 | Drama       |   0.250156   |
+|  1 | Comedy      |   0.187266   |
+|  2 | Action      |   0.0784956  |
+|  ... | ...    |   ...   |
+| 16 | Western     |   0.0106117  |
+| 17 | Film-Noir   |   0.00686642 |
+
 ### Draw a Lorenz curve graph for insights
 [Lorenz curve](https://en.wikipedia.org/wiki/Lorenz_curve) is a graphical representation of the distribution, the cumulative proportion of species is plotted against the cumulative proportion of individuals. This feature is also supported by **rsdiv** for helping practitioners' analysis.
 ```
