@@ -15,7 +15,8 @@ class DiversityMetrics:
     def _get_histogram(
         items: Union[Iterable[Hashable], Iterable[Sequence[Hashable]]],
     ) -> np.ndarray:
-        if isinstance(next(iter(items)), Sequence):
+        first_element = next(iter(items))
+        if isinstance(first_element, Sequence) and not isinstance(first_element, str):
             items = chain(*items)
         flatten_items = list(items)
         return np.asarray(pd.Series(flatten_items).value_counts())
@@ -80,7 +81,8 @@ class DiversityMetrics:
     def get_distribution(
         cls, items: Union[Iterable[Hashable], Iterable[Sequence[Hashable]]]
     ) -> pd.DataFrame:
-        if isinstance(next(iter(items)), Sequence):
+        first_element = next(iter(items))
+        if isinstance(first_element, Sequence) and not isinstance(first_element, str):
             items = chain(*items)
         counter: pd.DataFrame = pd.DataFrame(Counter(items).most_common())
         counter.columns = pd.Index(["category", "percentage"])
