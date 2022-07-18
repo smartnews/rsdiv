@@ -49,7 +49,7 @@ class GeoEncoder(BaseEncoder):
         encodings = pd.Series(series.apply(lambda x: self.encoding_single(x)))
         return encodings
 
-    def graw_geo_graph(self, dataframe: pd.DataFrame, source_name: str) -> None:
+    def draw_geo_graph(self, dataframe: pd.DataFrame, source_name: str) -> None:
         max_value: float = np.ceil(dataframe[source_name].max())
         min_value: float = np.floor(dataframe[source_name].min())
         fig = px.choropleth(
