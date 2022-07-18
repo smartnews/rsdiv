@@ -1,1 +1,2 @@
 include src/rsdiv/embedding/*.pkl
+include src/rsdiv/encoding/*.json
