@@ -104,6 +104,17 @@ metrics.get_lorenz_curve(ratings['movieId'])
 ```
 ![Lorenz](pics/Lorenz.png)
 
+### Evaluate the unblance from a sense of location
+**rsdiv** provides the encoders including geography encoding function to improve the intuitive understanding for practitioners, to start with the random values:
+```
+>>> geo = rs.GeoEncoder()
+>>> df = geo.read_source()
+>>> rng = np.random.RandomState(42)
+>>> df['random_values'] = rng.rand(len(df))
+>>> geo.graw_geo_graph(df, 'random_values')
+```
+![GeoEncoder](pics/random_values.png)
+
 ### Train a recommender
 **rsdiv** provides various implementations of core recommender algorithms. To start with, a wrapper for `LightFM` is also supported:
 ```
@@ -139,6 +150,7 @@ Not only for categorical labels, **rsdiv** also supports embedding for items, fo
 - implement the Bounded Greedy Selection Strategy, BGS diversify algorithm
 - implement the Determinantal Point Process, DPP diversify algorithm
 - implement the Modified Gram-Schmidt, MGS diversify algorithm
+
 ### Hyperparameter optimization
 **TODO**
 - compatible with [Optuna](https://github.com/optuna/optuna).

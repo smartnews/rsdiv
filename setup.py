@@ -15,12 +15,13 @@ install_requires = (
         "lightfm>=1.16",
         "scikit-learn>=1.1.1",
         "matplotlib>=3.5.2",
+        "plotly>=5.6.0",
     ],
 )
 
 setup(
     name="rsdiv",
-    version="0.1.9",
+    version="0.1.10",
     author="Yin Cheng",
     author_email="yin.sjtu@gmail.com",
     long_description=LONG_DESCRIPTION,
