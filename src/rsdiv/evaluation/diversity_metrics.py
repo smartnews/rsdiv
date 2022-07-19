@@ -85,8 +85,8 @@ class DiversityMetrics:
         if isinstance(first_element, Sequence) and not isinstance(first_element, str):
             items = chain(*items)
         counter: pd.DataFrame = pd.DataFrame(Counter(items).most_common())
-        counter.columns = pd.Index(["category", "percentage"])
-        counter["percentage"] /= counter["percentage"].sum()
+        counter.columns = pd.Index(["category", "count"])
+        counter["percentage"] = counter["count"] / counter["count"].sum()
         rvb = colors.LinearSegmentedColormap.from_list("", cls.clist)
         counter_len = len(counter)
         x = np.arange(counter_len).astype(float)
