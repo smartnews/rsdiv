@@ -83,7 +83,7 @@ Get the items' information:
 
 ### Evaluate the results in various aspects
 
-Load the evaluator to analyze the results, say, [Gini coefficient](https://en.wikipedia.org/wiki/Gini_coefficient) metric:
+Load the evaluator to analyze the results, say, the [Gini coefficient](https://en.wikipedia.org/wiki/Gini_coefficient) metric:
 
 ```python
 >>> metrics = rs.DiversityMetrics()
@@ -178,7 +178,7 @@ the `top 100` unseen recommended items for an arbitrary user, say `userId: 1024`
 
 ### Improve the diversity
 
-Not only for categorical labels, but **rsdiv** also supports embedding for items, for example, but the pretrained 300-dim embedding based on wiki_en by fastText can also be simply imported as:
+Not only for categorical labels, but **rsdiv** also supports embedding for items, for example, but the pre-trained 300-dim embedding based on wiki_en by fastText can also be simply imported as:
 
 ```python
 >>> emb = rs.FastTextEmbedder()
