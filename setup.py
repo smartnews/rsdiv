@@ -21,7 +21,7 @@ install_requires = (
 
 setup(
     name="rsdiv",
-    version="0.2.0",
+    version="0.2.1",
     author="Yin Cheng",
     author_email="yin.sjtu@gmail.com",
     long_description=LONG_DESCRIPTION,
