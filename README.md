@@ -70,7 +70,7 @@ Get the users' information:
 Get the items' information:
 
 ```python
->>> movies = loader.read_items()
+>>> items = loader.read_items()
 ```
 
 |    |   movieId | title      | genres      |   release_date |
@@ -155,7 +155,7 @@ metrics.get_lorenz_curve(ratings['movieId'])
 >>> rc = rs.FMRecommender(ratings, items, 0.3).fit()
 ```
 
-30% of interactions are split for the test set, and the precision at the `top`` 5` can be calculated with:
+30% of interactions are split for the test set, and the precision at the `top 5` can be calculated with:
 
 ```python
 >>> rc.precision_at_top_k(5)
