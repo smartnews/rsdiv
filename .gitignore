@@ -2,3 +2,10 @@
 build/*
 dist/*
 src/rsdiv.egg-info/*
+*.pyc
+
+# files generate by Intellj
+.idea/*
+
+# jupyter notebook
+.ipynb_checkpoints
