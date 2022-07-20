@@ -38,3 +38,19 @@ class RankingMetrics:
         idcg = RankingMetrics.DCG(top_scores)
         dcg = RankingMetrics.DCG(recommended_scores)
         return dcg / idcg
+
+    @staticmethod
+    def mean_average_precision(
+        recommended_relevance: np.ndarray, position: int
+    ) -> float:
+        if len(recommended_relevance.shape) == 1:
+            recommended_relevance = recommended_relevance.reshape((1, -1))
+        assert (
+            position <= recommended_relevance.shape[1]
+        ), "position should be smaller than the number of items recommended!"
+        recommended_relevance = recommended_relevance[:, :position]
+        cum_sum = np.cumsum(recommended_relevance, axis=1)
+
+        ap = cum_sum * recommended_relevance / np.arange(1, position + 1)
+        map: float = np.mean(ap).item()
+        return map
