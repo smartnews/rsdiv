@@ -75,18 +75,18 @@ class BaseRecommender(metaclass=ABCMeta):
     def predict_for_userId(self, user_id: int) -> np.ndarray:
         user_ids: np.ndarray = np.full(self.n_items, user_id - 1)
         item_ids: np.ndarray = np.arange(self.n_items)
-        predicton = self.predict(
+        prediction = self.predict(
             user_ids, item_ids, self.user_features, self.item_features
         )
-        return predicton
+        return prediction
 
     def predict_for_userId_unseen(self, user_id: int) -> np.ndarray:
         seen = (
             self.df_interaction[self.df_interaction["userId"] == user_id]["itemId"] - 1
         )
-        predicton = self.predict_for_userId(user_id)
-        predicton[seen] = -np.inf
-        return predicton
+        prediction = self.predict_for_userId(user_id)
+        prediction[seen] = -np.inf
+        return prediction
 
     def predict_top_n_unseen(self, user_id: int, top_n: int) -> Dict[int, float]:
         prediction = self.predict_for_userId_unseen(user_id)
