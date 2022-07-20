@@ -49,7 +49,9 @@ class GeoEncoder(BaseEncoder):
         encodings = pd.Series(series.apply(lambda x: self.encoding_single(x)))
         return encodings
 
-    def draw_geo_graph(self, dataframe: pd.DataFrame, source_name: str) -> None:
+    def draw_geo_graph(
+        self, dataframe: pd.DataFrame, source_name: str, hover_name: str
+    ) -> None:
         max_value: float = np.ceil(dataframe[source_name].max())
         min_value: float = np.floor(dataframe[source_name].min())
         fig = px.choropleth(
@@ -57,6 +59,7 @@ class GeoEncoder(BaseEncoder):
             geojson=self.encode_source,
             locations="index",
             color=source_name,
+            hover_name=hover_name,
             color_continuous_scale="OrRd",
             range_color=(min_value, max_value),
             scope="usa",

@@ -2,7 +2,7 @@
 
 [![Python](https://img.shields.io/badge/python-3.6%7C3.7%7C3.8%7C3.9-red?logo=Python&logoColor=white)](https://www.python.org)
 [![PyPI](https://img.shields.io/pypi/v/rsdiv?color=green)](https://pypi.org/project/rsdiv/)
-[![GitHub](https://img.shields.io/github/license/yuanlonghao/reranking?color=blue)](https://github.com/smartnews/rsdiv)
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/smartnews/rsdiv)
 
 **rsdiv** is a Python package for recommender systems to provide the measurements and improvements for the diversity of results.
 
@@ -142,7 +142,7 @@ metrics.get_lorenz_curve(ratings['movieId'])
 >>> df = geo.read_source()
 >>> rng = np.random.RandomState(42)
 >>> df['random_values'] = rng.rand(len(df))
->>> geo.draw_geo_graph(df, 'random_values')
+>>> geo.draw_geo_graph(df, 'random_values', 'name')
 ```
 
 ![GeoEncoder](pics/random_values.png)
