@@ -1,4 +1,4 @@
-from typing import Hashable, Iterable, Mapping, Optional, Sequence, TypeVar, Callable
+from typing import Callable, Hashable, Sequence, TypeVar
 
 import numpy as np
 
@@ -26,9 +26,11 @@ class RankingMetrics:
 
         top_scores = np.array(tuple(map(item2relevance, relevant_items)))
         top_scores.sort()
-        top_scores = top_scores[:-position-1:-1]
+        top_scores = top_scores[: -position - 1 : -1]
 
-        recommended_scores = np.array(tuple(map(item2relevance, recommended_items[:position])))
+        recommended_scores = np.array(
+            tuple(map(item2relevance, recommended_items[:position]))
+        )
 
         if exponential:
             top_scores = 2**top_scores - 1
