@@ -50,7 +50,10 @@ class GeoEncoder(BaseEncoder):
         return encodings
 
     def draw_geo_graph(
-        self, dataframe: pd.DataFrame, source_name: str, hover_name: str
+        self,
+        dataframe: pd.DataFrame,
+        source_name: str,
+        hover_name: Optional[str] = None,
     ) -> None:
         max_value: float = np.ceil(dataframe[source_name].max())
         min_value: float = np.floor(dataframe[source_name].min())
