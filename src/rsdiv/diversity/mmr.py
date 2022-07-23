@@ -1,4 +1,4 @@
-from typing import Sequence
+from typing import Optional, Sequence
 
 import numpy as np
 import numpy.ma as ma
@@ -11,7 +11,12 @@ class MaximalMarginalRelevance(BaseReranker):
         self.lbd = lbd
 
     def rerank(
-        self, quality_scores: np.ndarray, similarity_scores: np.ndarray, k: int
+        self,
+        quality_scores: np.ndarray,
+        *,
+        similarity_scores: np.ndarray,
+        embeddings: None = None,
+        k: int,
     ) -> Sequence[int]:
         n = quality_scores.shape[0]
         k = min(k, n)
