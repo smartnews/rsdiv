@@ -20,11 +20,11 @@ class GeoEncoder(BaseEncoder):
 
     def __init__(self) -> None:
         super().__init__()
-        self.encoder: pd.DataFrame = self.read_source()
+        self.encoder, self.geo_county_dict = self.read_source()
         self.coord: List[np.ndarray] = self.encoder.coord.to_list()
         self.index: pd.Index = pd.Index(self.encoder["index"])
 
-    def read_source(self) -> pd.DataFrame:
+    def read_source(self) -> tuple[pd.DataFrame, Dict]:
         geo_county_dict: Dict[str, List] = {}
         for item in self.encode_source["features"]:
             coordinates = item["geometry"]["coordinates"]
@@ -39,7 +39,7 @@ class GeoEncoder(BaseEncoder):
         dataframe = pd.DataFrame.from_dict(
             geo_county_dict, orient="index", columns=["coord", "name", "lstd"]
         ).reset_index()
-        return dataframe
+        return (dataframe, geo_county_dict)
 
     def encoding_single(self, org: Union[List, str]) -> Union[int, str]:
         tree = spatial.KDTree(self.coord)
