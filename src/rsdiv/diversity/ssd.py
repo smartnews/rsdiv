@@ -14,10 +14,10 @@ class SlidingSpectrumDecomposition(BaseReranker):
     def rerank(
         self,
         quality_scores: np.ndarray,
+        k: int,
         *,
         similarity_scores: None = None,
         embeddings: np.ndarray,
-        k: int,
     ) -> Sequence[int]:
         selection = np.argmax(quality_scores).item()
         ret = [selection]

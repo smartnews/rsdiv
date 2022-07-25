@@ -13,10 +13,10 @@ class MaximalMarginalRelevance(BaseReranker):
     def rerank(
         self,
         quality_scores: np.ndarray,
+        k: int,
         *,
         similarity_scores: np.ndarray,
         embeddings: None = None,
-        k: int,
     ) -> Sequence[int]:
         n = quality_scores.shape[0]
         k = min(k, n)
