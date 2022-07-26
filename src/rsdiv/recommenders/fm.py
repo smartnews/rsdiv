@@ -15,11 +15,17 @@ class FMRecommender(BaseRecommender):
         interaction: pd.DataFrame,
         items: pd.DataFrame,
         test_size: Optional[float] = None,
+        no_components: int = 10,
+        item_alpha: float = 0,
+        user_alpha: float = 0,
+        loss: str = "bpr",
     ) -> None:
         super().__init__(interaction, items, test_size)
         self.fm = LightFM(
-            no_components=10,
-            loss="bpr",
+            no_components=no_components,
+            item_alpha=item_alpha,
+            user_alpha=user_alpha,
+            loss=loss,
             random_state=42,
         )
 
