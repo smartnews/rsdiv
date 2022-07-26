@@ -3,6 +3,7 @@ from typing import List
 import numpy as np
 import pandas as pd
 import pytest
+from pytest import mark
 
 import rsdiv as rs
 
@@ -50,7 +51,9 @@ class TestMaximalMarginalRelevance:
         mmr = rs.MaximalMarginalRelevance(lbd)
         metrics = rs.DiversityMetrics()
         for k in scale_list:
-            selected_ind = mmr.rerank(relevance_scores, similarity_scores, k)
+            selected_ind = mmr.rerank(
+                relevance_scores, k, similarity_scores=similarity_scores
+            )
             gini_org = metrics.gini_coefficient(genres[:k])
             gini_mmr = metrics.gini_coefficient(
                 [genres[index] for index in selected_ind]
@@ -73,7 +76,9 @@ class TestMaximalMarginalRelevance:
         gini_ans = []
         for lbd in lbd_list:
             mmr = rs.MaximalMarginalRelevance(lbd)
-            selected_ind = mmr.rerank(relevance_scores, similarity_scores, scale)
+            selected_ind = mmr.rerank(
+                relevance_scores, scale, similarity_scores=similarity_scores
+            )
             gini_mmr = metrics.gini_coefficient(
                 [genres[index] for index in selected_ind]
             )
@@ -86,11 +91,13 @@ class TestMaximalMarginalRelevance:
         self,
         relevance_scores: np.ndarray,
         similarity_scores: np.ndarray,
-        lbd_list: List[float] = [-0.5, 1, 1.5],
+        lbd_list: List[float] = [1, 1.5],
         scale: int = 50,
     ) -> None:
         selected_org = list(range(scale))
         for lbd in lbd_list:
             mmr = rs.MaximalMarginalRelevance(lbd)
-            selected_ind = mmr.rerank(relevance_scores, similarity_scores, scale)
+            selected_ind = mmr.rerank(
+                relevance_scores, scale, similarity_scores=similarity_scores
+            )
             assert selected_ind == selected_org
