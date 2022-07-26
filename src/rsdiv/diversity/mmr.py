@@ -8,6 +8,7 @@ from .base import BaseReranker
 
 class MaximalMarginalRelevance(BaseReranker):
     def __init__(self, lbd: float):
+        assert 0 <= lbd <= 1, "lbd should be within the interval [0, 1]!"
         self.lbd = lbd
 
     def rerank(
@@ -18,6 +19,7 @@ class MaximalMarginalRelevance(BaseReranker):
         similarity_scores: np.ndarray,
         embeddings: None = None,
     ) -> Sequence[int]:
+        assert k > 0, "k must be larger than 0!"
         n = quality_scores.shape[0]
         k = min(k, n)
         new_selection = np.argmax(quality_scores)
