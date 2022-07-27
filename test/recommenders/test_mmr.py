@@ -25,7 +25,7 @@ class TestMaximalMarginalRelevance:
 
     @pytest.fixture
     def relevance_scores(self, candidate_scale: int) -> np.ndarray:
-        rng = np.random.RandomState(42)
+        rng = np.random.default_rng(42)
         scores = -np.sort(-rng.rand(candidate_scale))
         return scores
 
