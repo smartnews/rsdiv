@@ -3,6 +3,7 @@ from typing import List
 import numpy as np
 import pandas as pd
 import pytest
+from pytest import mark, raises
 
 import rsdiv as rs
 
@@ -50,7 +51,9 @@ class TestMaximalMarginalRelevance:
         mmr = rs.MaximalMarginalRelevance(lbd)
         metrics = rs.DiversityMetrics()
         for k in scale_list:
-            selected_ind = mmr.rerank(relevance_scores, similarity_scores, k)
+            selected_ind = mmr.rerank(
+                relevance_scores, k, similarity_scores=similarity_scores
+            )
             gini_org = metrics.gini_coefficient(genres[:k])
             gini_mmr = metrics.gini_coefficient(
                 [genres[index] for index in selected_ind]
@@ -73,7 +76,9 @@ class TestMaximalMarginalRelevance:
         gini_ans = []
         for lbd in lbd_list:
             mmr = rs.MaximalMarginalRelevance(lbd)
-            selected_ind = mmr.rerank(relevance_scores, similarity_scores, scale)
+            selected_ind = mmr.rerank(
+                relevance_scores, scale, similarity_scores=similarity_scores
+            )
             gini_mmr = metrics.gini_coefficient(
                 [genres[index] for index in selected_ind]
             )
@@ -82,15 +87,22 @@ class TestMaximalMarginalRelevance:
         assert gini_ans[-1] == gini_org
         assert sorted(gini_ans) == gini_ans
 
-    def test_domain(
+    @mark.parametrize("lbd", [-1.0, 1.5])
+    def test_lbd_bound(
         self,
         relevance_scores: np.ndarray,
         similarity_scores: np.ndarray,
-        lbd_list: List[float] = [-0.5, 1, 1.5],
-        scale: int = 50,
+        lbd: float,
     ) -> None:
-        selected_org = list(range(scale))
-        for lbd in lbd_list:
+        with raises(AssertionError):
             mmr = rs.MaximalMarginalRelevance(lbd)
-            selected_ind = mmr.rerank(relevance_scores, similarity_scores, scale)
-            assert selected_ind == selected_org
+
+    @mark.parametrize("scale", [0, -2])
+    def test_k_bound(
+        self, relevance_scores: np.ndarray, similarity_scores: np.ndarray, scale: int
+    ) -> None:
+        with raises(AssertionError):
+            mmr = rs.MaximalMarginalRelevance(0.5)
+            ret = mmr.rerank(
+                relevance_scores, scale, similarity_scores=similarity_scores
+            )

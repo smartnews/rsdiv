@@ -7,6 +7,11 @@ import numpy as np
 class BaseReranker(ABC):
     @abstractmethod
     def rerank(
-        self, quality_scores: np.ndarray, similarity_scores: np.ndarray, k: int
+        self,
+        quality_scores: np.ndarray,
+        k: int,
+        *,
+        similarity_scores: Optional[np.ndarray],
+        embeddings: Optional[np.ndarray],
     ) -> Sequence[int]:
         raise NotImplementedError("Rerank method not implemented!")
