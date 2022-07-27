@@ -13,8 +13,9 @@ class RankingMetrics:
         ).item()
         return score
 
-    @staticmethod
+    @classmethod
     def nDCG(
+        cls,
         item2relevance: Callable[[T], float],
         relevant_items: Sequence[T],
         recommended_items: Sequence[T],
@@ -35,8 +36,8 @@ class RankingMetrics:
         if exponential:
             top_scores = 2**top_scores - 1
             recommended_scores = 2**recommended_scores - 1
-        idcg = RankingMetrics.DCG(top_scores)
-        dcg = RankingMetrics.DCG(recommended_scores)
+        idcg = cls.DCG(top_scores)
+        dcg = cls.DCG(recommended_scores)
         return dcg / idcg
 
     @staticmethod
