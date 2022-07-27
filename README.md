@@ -140,7 +140,7 @@ metrics.get_lorenz_curve(ratings['movieId'])
 ```python
 >>> geo = rs.GeoEncoder()
 >>> df = geo.read_source()
->>> rng = np.random.RandomState(42)
+>>> rng = np.random.default_rng(42)
 >>> df['random_values'] = rng.rand(len(df))
 >>> geo.draw_geo_graph(df, 'random_values', 'name')
 ```
