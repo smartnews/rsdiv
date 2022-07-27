@@ -18,8 +18,11 @@ class SlidingSpectrumDecomposition(BaseReranker):
         *,
         similarity_scores: None = None,
         embeddings: np.ndarray,
+        inplace: bool = False
     ) -> Sequence[int]:
         assert k > 0, "k must be larger than 0!"
+        if not inplace:
+            embeddings = embeddings.copy()
         selection = np.argmax(quality_scores).item()
         ret = [selection]
         volume = self.gamma * norm(embeddings[selection])
