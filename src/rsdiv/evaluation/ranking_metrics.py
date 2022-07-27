@@ -2,7 +2,7 @@ from typing import Callable, Hashable, Sequence, TypeVar
 
 import numpy as np
 
-ItemNameType = TypeVar("ItemNameType", bound=Hashable)
+T = TypeVar("T", bound=Hashable)
 
 
 class RankingMetrics:
@@ -15,9 +15,9 @@ class RankingMetrics:
 
     @staticmethod
     def nDCG(
-        item2relevance: Callable[[ItemNameType], float],
-        relevant_items: Sequence[ItemNameType],
-        recommended_items: Sequence[ItemNameType],
+        item2relevance: Callable[[T], float],
+        relevant_items: Sequence[T],
+        recommended_items: Sequence[T],
         position: int,
         exponential: bool = False,
     ) -> float:
