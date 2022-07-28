@@ -9,6 +9,7 @@ norm = np.linalg.norm
 
 class SlidingSpectrumDecomposition(BaseReranker):
     def __init__(self, gamma: float):
+        assert gamma >= 0, "gamma should be >= 0!"
         self.gamma = gamma
 
     def rerank(
