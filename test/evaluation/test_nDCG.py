@@ -9,7 +9,7 @@ from rsdiv.evaluation import RankingMetrics
 
 
 class TestNDCG:
-    rng = np.random.default_rng(15213)
+    rng = np.random.default_rng(42)
 
     @mark.parametrize("item_size", [10, 100, 500])
     @mark.parametrize("relevant_size", [10, 100, 500])
