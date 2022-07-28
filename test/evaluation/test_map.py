@@ -9,7 +9,7 @@ from rsdiv.evaluation import RankingMetrics
 
 
 class TestMAP:
-    rng = np.random.default_rng(15213)
+    rng = np.random.default_rng(42)
 
     @mark.parametrize("user_size", [1, 10, 50, 100, 500])
     @mark.parametrize("recommend_size", [10, 50, 100, 500])
