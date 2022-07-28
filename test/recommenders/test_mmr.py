@@ -26,7 +26,7 @@ class TestMaximalMarginalRelevance:
     @pytest.fixture
     def relevance_scores(self, candidate_scale: int) -> np.ndarray:
         rng = np.random.default_rng(42)
-        scores = -np.sort(-rng.rand(candidate_scale))
+        scores = -np.sort(-rng.random(candidate_scale))
         return scores
 
     @pytest.fixture
@@ -39,36 +39,36 @@ class TestMaximalMarginalRelevance:
         scores: np.ndarray = embedding @ embedding.T
         return scores
 
+    @mark.parametrize("lbd", [0.0, 0.2, 0.3])
+    @mark.parametrize("k", [50, 70, 100])
     def test_rerank_scale(
         self,
         dataset: pd.DataFrame,
         relevance_scores: np.ndarray,
         similarity_scores: np.ndarray,
-        lbd: float = 0.5,
-        scale_list: List[int] = [50, 70, 100],
+        lbd: float,
+        k: int,
     ) -> None:
         genres = dataset["genres"]
         mmr = rs.MaximalMarginalRelevance(lbd)
         metrics = rs.DiversityMetrics()
-        for k in scale_list:
-            selected_ind = mmr.rerank(
-                relevance_scores, k, similarity_scores=similarity_scores
-            )
-            gini_org = metrics.gini_coefficient(genres[:k])
-            gini_mmr = metrics.gini_coefficient(
-                [genres[index] for index in selected_ind]
-            )
-            assert selected_ind[0] == 0
-            assert len(selected_ind) == k
-            assert gini_org > gini_mmr
+        selected_ind = mmr.rerank(
+            relevance_scores, k, similarity_scores=similarity_scores
+        )
+        gini_org = metrics.gini_coefficient(genres[:k])
+        gini_mmr = metrics.gini_coefficient([genres[index] for index in selected_ind])
+        assert selected_ind[0] == 0
+        assert len(selected_ind) == k
+        assert gini_org > gini_mmr
 
+    @mark.parametrize("scale", [150, 160, 170, 180])
     def test_rerank_lambda(
         self,
         dataset: pd.DataFrame,
         relevance_scores: np.ndarray,
         similarity_scores: np.ndarray,
-        lbd_list: List[float] = [0, 0.3, 0.6, 1],
-        scale: int = 100,
+        scale: int,
+        lbd_list: List[float] = [0, 0.1, 0.2, 0.3, 1],
     ) -> None:
         genres = dataset["genres"]
         metrics = rs.DiversityMetrics()
