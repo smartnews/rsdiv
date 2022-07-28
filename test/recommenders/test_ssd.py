@@ -24,7 +24,7 @@ class TestSlidingSpectrumDecomposition:
 
     @fixture
     def relevance_scores(self, candidate_scale: int) -> np.ndarray:
-        rng = np.random.default_rng(96)
+        rng = np.random.default_rng(42)
         scores = -np.sort(-rng.random(candidate_scale))
         return scores
 
@@ -38,9 +38,9 @@ class TestSlidingSpectrumDecomposition:
 
         return embedding
 
-    # Note: these tests calculate diversity scores of a recommendation by movies' categorical genres, but the diversity
-    # enhancement algorithms use genres' embeddings from fasttext to rerank. As a result, the scores might decrease when
-    # gamma or scale are small. The tests here choose scale and gamma large enough to make SSD pass.
+    # Note: these tests calculate diversity scores of a recommendation by directly using movies' categorical genres, but
+    # the diversity enhancement algorithms use genres' embeddings from fasttext to rerank. As a result, the scores might
+    # decrease when gamma or scale are small. The tests here choose scale and gamma large enough to make SSD pass.
     @mark.parametrize("scale", [50, 70, 100])
     @mark.parametrize("gamma", np.linspace(20, 60, 20))
     def test_rerank_scale(
@@ -59,7 +59,6 @@ class TestSlidingSpectrumDecomposition:
         gini_ssd = metrics.gini_coefficient([genres[index] for index in selected_ind])
         assert selected_ind[0] == 0
         assert len(selected_ind) == scale
-        print("\norg v.s. ssd: ", gini_org, gini_ssd)
         assert gini_org >= gini_ssd
 
     @mark.parametrize("scale", [100, 120, 150, 170])
@@ -82,7 +81,24 @@ class TestSlidingSpectrumDecomposition:
                 [genres[index] for index in selected_ind]
             )
             gini_ans.append(gini_ssd)
-        print(gini_ans)
         assert selected_ind[0] == 0
         assert gini_ans[0] == gini_org
         assert sorted(gini_ans, reverse=True) == gini_ans
+
+    @mark.parametrize("gamma", [-1.0, -2.0])
+    def test_gamma_bound(
+        self,
+        relevance_scores: np.ndarray,
+        embeddings: np.ndarray,
+        gamma: float,
+    ) -> None:
+        with raises(AssertionError):
+            ssd = rs.SlidingSpectrumDecomposition(gamma)
+
+    @mark.parametrize("scale", [0, -2])
+    def test_k_bound(
+        self, relevance_scores: np.ndarray, embeddings: np.ndarray, scale: int
+    ) -> None:
+        with raises(AssertionError):
+            ssd = rs.SlidingSpectrumDecomposition(0.5)
+            ret = ssd.rerank(relevance_scores, scale, embeddings=embeddings)
