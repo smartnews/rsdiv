@@ -62,7 +62,7 @@ class TestSlidingSpectrumDecomposition:
         assert gini_org >= gini_ssd
 
     @mark.parametrize("scale", [100, 120, 150, 170])
-    def test_rerank_lambda(
+    def test_rerank_gamma(
         self,
         dataset: pd.DataFrame,
         relevance_scores: np.ndarray,
