@@ -190,7 +190,15 @@ Not only for categorical labels, but **rsdiv** also supports embedding for items
 
 - [Maximal Marginal Relevance](https://www.cs.cmu.edu/~jgc/publication/The_Use_MMR_Diversity_Based_LTMIR_1998.pdf), MMR diversify algorithm:
 
+```python
+div = rs.MaximalMarginalRelevance()
+```
+
 - Modified Gram-Schmidt, MGS diversify algorithm, also known as SSD([Sliding Spectrum Decomposition](https://arxiv.org/pdf/2107.05204.pdf)):
+
+```python
+div = rs.SlidingSpectrumDecomposition()
+```
 
 The pseudocode codes are:
 
