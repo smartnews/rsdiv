@@ -68,7 +68,7 @@ class TestSlidingSpectrumDecomposition:
         relevance_scores: np.ndarray,
         embeddings: np.ndarray,
         scale: int,
-        gamma: List[float] = np.linspace(0, 20, 20),
+        gamma: np.ndarray = np.linspace(0, 20, 20),
     ) -> None:
         genres = dataset["genres"]
         metrics = rs.DiversityMetrics()

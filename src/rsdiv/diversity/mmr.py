@@ -16,8 +16,8 @@ class MaximalMarginalRelevance(BaseReranker):
         quality_scores: np.ndarray,
         k: int,
         *,
-        similarity_scores: np.ndarray,
-        embeddings: None = None,
+        similarity_scores: np.Optional[np.ndarray],
+        embeddings: Optional[np.ndarray] = None,
     ) -> Sequence[int]:
         assert k > 0, "k must be larger than 0!"
         n = quality_scores.shape[0]
