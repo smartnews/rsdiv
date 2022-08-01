@@ -11,7 +11,7 @@ class BaseReranker(ABC):
         quality_scores: np.ndarray,
         k: int,
         *,
-        similarity_scores: Optional[np.ndarray],
-        embeddings: Optional[np.ndarray],
+        similarity_scores: np.ndarray,
+        embeddings: np.ndarray,
     ) -> Sequence[int]:
         raise NotImplementedError("Rerank method not implemented!")

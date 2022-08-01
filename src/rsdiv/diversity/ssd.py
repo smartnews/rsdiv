@@ -1,4 +1,4 @@
-from typing import Sequence
+from typing import Optional, Sequence
 
 import numpy as np
 
@@ -17,7 +17,7 @@ class SlidingSpectrumDecomposition(BaseReranker):
         quality_scores: np.ndarray,
         k: int,
         *,
-        similarity_scores: None = None,
+        similarity_scores: Optional[np.ndarray] = None,
         embeddings: np.ndarray,
         inplace: bool = False
     ) -> Sequence[int]:
@@ -35,7 +35,7 @@ class SlidingSpectrumDecomposition(BaseReranker):
             norms *= volume
             scores = norms + quality_scores
             scores[ret] = -np.inf
-            selection = np.argmax(scores)
+            selection = np.argmax(scores).item()
             ret.append(selection)
             volume = norms[selection]
         return ret

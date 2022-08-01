@@ -1,4 +1,4 @@
-from typing import Sequence
+from typing import Optional, Sequence
 
 import numpy as np
 import numpy.ma as ma
@@ -17,31 +17,31 @@ class MaximalMarginalRelevance(BaseReranker):
         k: int,
         *,
         similarity_scores: np.ndarray,
-        embeddings: None = None,
+        embeddings: Optional[np.ndarray] = None,
     ) -> Sequence[int]:
         assert k > 0, "k must be larger than 0!"
         n = quality_scores.shape[0]
         k = min(k, n)
-        new_selection = np.argmax(quality_scores)
+        new_selection = np.argmax(quality_scores).item()
         selected_ind = [new_selection]
-        similarity_scores = ma.array(similarity_scores, mask=True)
+        ma_similarity_scores = ma.array(similarity_scores, mask=True)
 
-        similarity_scores.mask[:, new_selection] = False
-        similarity_scores[new_selection, new_selection] = ma.masked
+        ma_similarity_scores.mask[:, new_selection] = False
+        ma_similarity_scores[new_selection, new_selection] = ma.masked
 
         quality_scores = ma.array(quality_scores)
         quality_scores[new_selection] = ma.masked
 
         for _ in range(k - 1):
             scores = self.lbd * quality_scores - (1.0 - self.lbd) * np.max(
-                similarity_scores, axis=1
+                ma_similarity_scores, axis=1
             )
             new_selection = np.argmax(scores).item()
             quality_scores[new_selection] = ma.masked
 
-            similarity_scores.mask[:, new_selection] = False
-            similarity_scores[new_selection, :] = ma.masked
-            similarity_scores[selected_ind, new_selection] = ma.masked
+            ma_similarity_scores.mask[:, new_selection] = False
+            ma_similarity_scores[new_selection, :] = ma.masked
+            ma_similarity_scores[selected_ind, new_selection] = ma.masked
 
             selected_ind.append(new_selection)
         return selected_ind

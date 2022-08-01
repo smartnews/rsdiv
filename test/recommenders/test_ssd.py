@@ -1,4 +1,4 @@
-from typing import List
+from typing import Iterable, List
 
 import numpy as np
 import pandas as pd
@@ -68,7 +68,7 @@ class TestSlidingSpectrumDecomposition:
         relevance_scores: np.ndarray,
         embeddings: np.ndarray,
         scale: int,
-        gamma: List[float] = np.linspace(0, 20, 20),
+        gamma: Iterable[float] = np.linspace(0, 20, 20),
     ) -> None:
         genres = dataset["genres"]
         metrics = rs.DiversityMetrics()
