@@ -41,6 +41,7 @@ class TestSlidingSpectrumDecomposition:
     # Note: these tests calculate diversity scores of a recommendation by directly using movies' categorical genres, but
     # the diversity enhancement algorithms use genres' embeddings from fasttext to rerank. As a result, the scores might
     # decrease when gamma or scale are small. The tests here choose scale and gamma large enough to make SSD pass.
+    @mark.filterwarnings("error")
     @mark.parametrize("scale", [50, 70, 100])
     @mark.parametrize("gamma", np.linspace(20, 60, 20))
     def test_rerank_scale(
@@ -61,6 +62,7 @@ class TestSlidingSpectrumDecomposition:
         assert len(selected_ind) == scale
         assert gini_org >= gini_ssd
 
+    @mark.filterwarnings("error")
     @mark.parametrize("scale", [100, 120, 150, 170])
     def test_rerank_gamma(
         self,
@@ -85,6 +87,7 @@ class TestSlidingSpectrumDecomposition:
         assert gini_ans[0] == gini_org
         assert sorted(gini_ans, reverse=True) == gini_ans
 
+    @mark.filterwarnings("error")
     @mark.parametrize("gamma", [-1.0, -2.0])
     def test_gamma_bound(
         self,
@@ -95,6 +98,7 @@ class TestSlidingSpectrumDecomposition:
         with raises(AssertionError):
             ssd = rs.SlidingSpectrumDecomposition(gamma)
 
+    @mark.filterwarnings("error")
     @mark.parametrize("scale", [0, -2])
     def test_k_bound(
         self, relevance_scores: np.ndarray, embeddings: np.ndarray, scale: int

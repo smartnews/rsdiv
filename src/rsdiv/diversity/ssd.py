@@ -29,8 +29,12 @@ class SlidingSpectrumDecomposition(BaseReranker):
         volume = self.gamma * norm(embeddings[selection])
         for _ in range(k - 1):
             selected_emb = embeddings[selection]
-            selected_emb /= norm(selected_emb)
-            embeddings -= np.outer(embeddings @ selected_emb, selected_emb)
+            selected_norm = norm(selected_emb)
+            if (
+                selected_norm > 1e-7
+            ):  # treat new selection as 0 vector if it's too small
+                selected_emb /= selected_norm
+                embeddings -= np.outer(embeddings @ selected_emb, selected_emb)
             norms = norm(embeddings, axis=1)
             norms *= volume
             scores = norms + quality_scores
