@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Union
 
 import numpy as np
 import pandas as pd
@@ -14,13 +14,14 @@ class FMRecommender(BaseRecommender):
         self,
         interaction: pd.DataFrame,
         items: pd.DataFrame,
-        test_size: Optional[float] = None,
+        test_size: Union[float, int] = 0.3,
+        random_split: bool = True,
         no_components: int = 10,
         item_alpha: float = 0,
         user_alpha: float = 0,
         loss: str = "bpr",
     ) -> None:
-        super().__init__(interaction, items, test_size)
+        super().__init__(interaction, items, test_size, random_split)
         self.fm = LightFM(
             no_components=no_components,
             item_alpha=item_alpha,
@@ -28,6 +29,7 @@ class FMRecommender(BaseRecommender):
             loss=loss,
             random_state=42,
         )
+        self.train_mat, self.test_mat = self.process_interaction()
 
     def _fit(self) -> None:
         self.fm.fit(self.train_mat, epochs=30)

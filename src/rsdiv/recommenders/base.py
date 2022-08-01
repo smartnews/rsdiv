@@ -1,5 +1,5 @@
 from abc import ABCMeta, abstractmethod
-from typing import Dict, Optional, Tuple, TypeVar
+from typing import Dict, Optional, Tuple, TypeVar, Union
 
 import numpy as np
 import pandas as pd
@@ -12,7 +12,8 @@ R = TypeVar("R", bound="BaseRecommender")
 class BaseRecommender(metaclass=ABCMeta):
     df_interaction: pd.DataFrame
     items: pd.DataFrame
-    test_size: Optional[float]
+    test_size: Union[float, int]
+    random_split: bool
     user_features: Optional[pd.DataFrame]
     item_features: Optional[pd.DataFrame]
 
@@ -20,28 +21,45 @@ class BaseRecommender(metaclass=ABCMeta):
         self,
         df_interaction: pd.DataFrame,
         items: pd.DataFrame,
-        test_size: Optional[float],
+        test_size: Union[float, int],
+        random_split: bool,
         user_features: Optional[pd.DataFrame] = None,
         item_features: Optional[pd.DataFrame] = None,
     ) -> None:
-        self.n_users, self.n_items = df_interaction.max()[:2]
         self.df_interaction = self.get_interaction(df_interaction)
+        self.n_users, self.n_items = self.df_interaction.max()[:2]
         self.items = items
         self.user_features = user_features
         self.item_features = item_features
         self.test_size = test_size
-        self.train_mat, self.test_mat = self.process_interaction()
+        self.random_split = random_split
 
     def get_interaction(self, df_interaction: pd.DataFrame) -> pd.DataFrame:
+        """The converter for input dataframe
+
+        Args:
+            df_interaction(pd.DataFrame): user/item interaction matrix.
+                columns should be ["userId", "itemId", "interaction"]
+
+        """
+
         dataframe = df_interaction.iloc[:, :3]
         dataframe.columns = pd.Index(["userId", "itemId", "interaction"])
+        dataframe["userId"] = pd.Categorical(dataframe["userId"]).codes + 1
+        dataframe["itemId"] = pd.Categorical(dataframe["itemId"]).codes + 1
         return dataframe
 
     def process_interaction(self) -> Tuple[sps.coo_matrix, sps.coo_matrix]:
         dataframe = self.df_interaction
-        train, test = train_test_split(
-            dataframe, test_size=self.test_size, random_state=42
-        )
+        print(dataframe)
+        print(self.n_users, self.n_items)
+        if not (self.random_split) and self.test_size > 1:
+            train = dataframe.iloc[int(self.test_size) :, :]
+            test = dataframe.iloc[: int(self.test_size), :]
+        else:
+            train, test = train_test_split(
+                dataframe, test_size=self.test_size, random_state=42
+            )
         train_mat = sps.coo_matrix(
             (train.interaction, (train.userId - 1, train.itemId - 1)),
             (self.n_users, self.n_items),

@@ -152,14 +152,14 @@ metrics.get_lorenz_curve(ratings['movieId'])
 **rsdiv** provides various implementations of core recommender algorithms. To start with, a wrapper for `LightFM` is also supported:
 
 ```python
->>> rc = rs.FMRecommender(ratings, items, 0.3).fit()
+>>> rc = rs.FMRecommender(ratings, items).fit()
 ```
 
-30% of interactions are split for the test set, and the precision at the `top 5` can be calculated with:
+30% of interactions are split for the test set by default, and the precision at the `top 5` can be calculated with:
 
 ```python
 >>> rc.precision_at_top_k(5)
->>> 0.15639074
+>>> 0.15490067
 ```
 
 the `top 100` unseen recommended items for an arbitrary user, say `userId: 1024`, can be simply given by:
