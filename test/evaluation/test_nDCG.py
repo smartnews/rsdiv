@@ -1,4 +1,4 @@
-from typing import Dict, Sequence
+from typing import Dict, List, Sequence
 
 import numpy as np
 import pytest
@@ -22,7 +22,8 @@ class TestNDCG:
             skip()
         scores = self.rng.random(item_size)
         sorted_indices = np.argsort(scores)
-        relevant_id = sorted_indices[: -relevant_size - 1 : -1]
+        sorted_indices = sorted_indices[: -relevant_size - 1 : -1]
+        relevant_id: List[int] = sorted_indices.tolist()
         assert_allclose(
             RankingMetrics.nDCG(
                 scores.__getitem__, relevant_id, relevant_id, position, exponential
@@ -50,11 +51,11 @@ class TestNDCG:
             skip()
         scores = self.rng.random(item_size)
         sorted_indices = np.argsort(scores)
-        relevant_ind = sorted_indices[: -relevant_size - 1 : -1]
+        relevant_ind = sorted_indices[: -relevant_size - 1 : -1].tolist()
         self.rng.shuffle(relevant_ind)
         recommend_id = self.rng.choice(
             np.arange(item_size), recommend_size, replace=False
-        )
+        ).tolist()
         assert (
             0
             <= RankingMetrics.nDCG(
