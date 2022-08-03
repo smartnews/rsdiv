@@ -29,7 +29,6 @@ class FMRecommender(BaseRecommender):
             loss=loss,
             random_state=42,
         )
-        self.train_mat, self.test_mat = self.process_interaction()
 
     def _fit(self) -> None:
         self.fm.fit(self.train_mat, epochs=30)
