@@ -1,6 +1,3 @@
-from collections import defaultdict
-from typing import Dict, Sequence
-
 import numpy as np
 from numpy.testing import assert_allclose
 from pytest import mark, skip

@@ -1,7 +1,6 @@
 from typing import Dict, List, Sequence
 
 import numpy as np
-import pytest
 from numpy.testing import assert_allclose
 from pytest import mark, skip
 
