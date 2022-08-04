@@ -17,10 +17,13 @@ class IALSRecommender(BaseRecommender):
         random_split: bool = False,
         factors: int = 64,
         regularization: float = 0.05,
+        random_state: Optional[int] = 42,
     ) -> None:
         super().__init__(df_interaction, items, test_size, random_split)
         self.ials = AlternatingLeastSquares(
-            factors=factors, regularization=regularization
+            factors=factors,
+            regularization=regularization,
+            random_state=random_state,
         )
         self.train_mat = self.bm25(self.train_mat)
 
