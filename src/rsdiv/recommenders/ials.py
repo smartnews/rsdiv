@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 from implicit.als import AlternatingLeastSquares
 from scipy import sparse as sps
+from sklearn.metrics import roc_auc_score
 
 from .base import BaseRecommender
 
@@ -51,6 +52,13 @@ class IALSRecommender(BaseRecommender):
         )
         id_list: List = [list(id) for id in ids]
         return (id_list, scores)
+
+    def auc_score(self) -> float:
+        test: pd.DataFrame = self.df_interaction.head(self.test_size)
+        user_ids: np.ndarray = test["userId"]
+        item_ids: np.ndarray = test["itemId"]
+        prediction: np.ndarray = self.predict(user_ids, item_ids)
+        return float(roc_auc_score(test["interaction"], prediction))
 
     def predict(
         self,
