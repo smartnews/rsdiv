@@ -59,11 +59,9 @@ class IALSRecommender(BaseRecommender):
         user_features: Optional[sps.csr_matrix] = None,
         item_features: Optional[sps.csr_matrix] = None,
     ) -> np.ndarray:
-        ids, scores = self.recommend(user_ids)
+        user_factors = self.ials.user_factors[user_ids]
+        item_factors = self.ials.item_factors[item_ids]
         predict_array: np.ndarray = np.asarray(
-            [
-                score[user.index(item)]
-                for user, item, score in zip(ids, item_ids, scores)
-            ]
+            [user @ item for user, item in zip(user_factors, item_factors)]
         )
         return predict_array
