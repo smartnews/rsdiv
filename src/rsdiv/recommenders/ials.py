@@ -17,15 +17,21 @@ class IALSRecommender(BaseRecommender):
         test_size: Union[float, int],
         random_split: bool = False,
         factors: int = 64,
-        regularization: float = 0.05,
+        regularization: float = 0.01,
+        alpha: float = 1,
+        iterations: int = 15,
         random_state: Optional[int] = 42,
     ) -> None:
         super().__init__(df_interaction, items, test_size, random_split)
         self.ials = AlternatingLeastSquares(
             factors=factors,
             regularization=regularization,
+            alpha=alpha,
+            iterations=iterations,
             random_state=random_state,
+            calculate_training_loss=True,
         )
+        AlternatingLeastSquares()
         self.train_mat = self.bm25(self.train_mat)
 
     def bm25(self, X: sps.coo_matrix, K1: int = 100, B: float = 0.8) -> sps.csr_matrix:
@@ -58,7 +64,10 @@ class IALSRecommender(BaseRecommender):
         user_ids: np.ndarray = test["userId"]
         item_ids: np.ndarray = test["itemId"]
         prediction: np.ndarray = self.predict(user_ids, item_ids)
-        return float(roc_auc_score(test["interaction"], prediction))
+        label: np.ndarray = np.asarray(
+            [0 if item == 0 else 1 for item in test["interaction"]]
+        )
+        return float(roc_auc_score(label, prediction))
 
     def predict(
         self,
