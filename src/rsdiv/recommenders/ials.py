@@ -16,10 +16,10 @@ class IALSRecommender(BaseRecommender):
         items: pd.DataFrame,
         test_size: Union[float, int],
         random_split: bool = False,
-        factors: int = 64,
-        regularization: float = 0.01,
-        alpha: float = 1,
-        iterations: int = 15,
+        factors: int = 300,
+        regularization: float = 0.03,
+        alpha: float = 0.6,
+        iterations: int = 10,
         random_state: Optional[int] = 42,
     ) -> None:
         super().__init__(df_interaction, items, test_size, random_split)
@@ -68,6 +68,22 @@ class IALSRecommender(BaseRecommender):
             [0 if item == 0 else 1 for item in test["interaction"]]
         )
         return float(roc_auc_score(label, prediction))
+
+    def precision_at_top_k(self, top_k: int = 100) -> float:
+        test: pd.DataFrame = self.df_interaction.head(self.test_size)
+        check = test[test["interaction"] == 1].copy()
+        user_ids: np.ndarray = check["userId"]
+        item_ids: np.ndarray = check["itemId"]
+        result = self.ials.recommend(
+            user_ids,
+            self.train_mat[user_ids],
+            N=top_k,
+            filter_already_liked_items=False,
+        )
+        precision = sum([item in row for row, item in zip(result[0], item_ids)]) / len(
+            check
+        )
+        return float(precision)
 
     def predict(
         self,
