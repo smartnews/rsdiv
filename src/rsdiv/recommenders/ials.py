@@ -85,6 +85,17 @@ class IALSRecommender(BaseRecommender):
         )
         return float(precision)
 
+    def get_item_factors(self) -> np.ndarray:
+        return np.asarray(self.ials.item_factors)
+
+    def get_user_factors(self) -> np.ndarray:
+        return np.asarray(self.ials.user_factors)
+
+    def mask_items(self, mask_row: np.ndarray) -> None:
+        mask = np.ones(self.ials.item_factors.shape[0], dtype=bool)
+        mask[mask_row] = False
+        self.ials.item_factors[mask] = 0
+
     def predict(
         self,
         user_ids: np.ndarray,
