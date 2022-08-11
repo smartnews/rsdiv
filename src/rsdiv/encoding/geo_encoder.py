@@ -1,6 +1,6 @@
 import json
 import pkgutil
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 import numpy as np
 import pandas as pd
@@ -24,7 +24,7 @@ class GeoEncoder(BaseEncoder):
         self.coord: List[np.ndarray] = self.encoder.coord.to_list()
         self.index: pd.Index = pd.Index(self.encoder["index"])
 
-    def read_source(self) -> tuple[pd.DataFrame, Dict]:
+    def read_source(self) -> Tuple[pd.DataFrame, Dict]:
         geo_county_dict: Dict[str, List] = {}
         for item in self.encode_source["features"]:
             coordinates = item["geometry"]["coordinates"]
