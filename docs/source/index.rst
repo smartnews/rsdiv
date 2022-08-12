@@ -1,14 +1,14 @@
 .. rsdiv documentation master file
 
 
-rsdiv
-====================================
+rsdiv - reranking for multi-objective optimized recommender systems.
+====================================================================
 
-Python package for recommender systems to provide the measurements and improvements for the diversity of results.
+**rsdiv** provide the measurements and improvements for the diversity of results.
 
 This project provides:
 
-* various kinds of metrics to measure the diversity of recommender systems from a quantitative view.
+* various kinds of metrics to measure the quality of recommender systems from a quantitative view.
 * various implementations for diversifying algorithms and models.
 * various implementations of core recommender algorithms.
 * benchmarks for comparing and further analysis.
