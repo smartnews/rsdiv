@@ -21,8 +21,9 @@ class IALSRecommender(BaseRecommender):
         alpha: float = 0.6,
         iterations: int = 10,
         random_state: Optional[int] = 42,
+        toppop_mask: Optional[np.ndarray] = None,
     ) -> None:
-        super().__init__(df_interaction, items, test_size, random_split)
+        super().__init__(df_interaction, items, test_size, random_split, toppop_mask)
         self.ials = AlternatingLeastSquares(
             factors=factors,
             regularization=regularization,
@@ -31,11 +32,10 @@ class IALSRecommender(BaseRecommender):
             random_state=random_state,
             calculate_training_loss=True,
         )
-        AlternatingLeastSquares()
         self.train_mat = self.bm25(self.train_mat)
 
     def bm25(self, X: sps.coo_matrix, K1: int = 100, B: float = 0.8) -> sps.csr_matrix:
-        """Weighs each col of a sparse matrix X  by BM25 weighting.
+        """Weighs each col of a sparse matrix X by BM25 weighting.
         - `Taken from nearest_neighbours.py of implicit
           <https://github.com/benfred/implicit/blob/main/implicit/nearest_neighbours.py>`_
         """
@@ -58,6 +58,14 @@ class IALSRecommender(BaseRecommender):
         )
         id_list: List = [list(id) for id in ids]
         return (id_list, scores)
+
+    def recommend_single(self, user_token: str, top_k: int = 100) -> np.ndarray:
+        if user_token in self.userDict:
+            user_id = self.userDict[user_token]
+            ids, _ = self.ials.recommend(user_id, self.train_mat[user_id], N=top_k)
+            return np.asarray(ids)
+        else:
+            return self.toppop
 
     def auc_score(self) -> float:
         test: pd.DataFrame = self.df_interaction.head(self.test_size)
@@ -91,9 +99,9 @@ class IALSRecommender(BaseRecommender):
     def get_user_factors(self) -> np.ndarray:
         return np.asarray(self.ials.user_factors)
 
-    def mask_items(self, mask_row: np.ndarray) -> None:
+    def mask_items(self, keep_row: np.ndarray) -> None:
         mask = np.ones(self.ials.item_factors.shape[0], dtype=bool)
-        mask[mask_row] = False
+        mask[keep_row] = False
         self.ials.item_factors[mask] = 0
 
     def predict(
