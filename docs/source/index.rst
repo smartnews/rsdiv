@@ -12,7 +12,7 @@ This project provides:
 * various implementations for diversifying algorithms and models.
 * various implementations of core recommender algorithms.
 * benchmarks for comparing and further analysis.
-* hyperparameter optimization based on [Optuna](https://github.com/optuna/optuna).
+* hyperparameter optimization based on `Optuna <https://github.com/optuna/optuna>`_
 
 Basic Usage
 -----------
