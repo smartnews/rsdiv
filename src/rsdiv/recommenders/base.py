@@ -20,13 +20,16 @@ class BaseRecommender(metaclass=ABCMeta):
     def __init__(
         self,
         df_interaction: pd.DataFrame,
-        items: pd.DataFrame,
+        items: Optional[pd.DataFrame],
         test_size: Union[float, int],
         random_split: bool,
         user_features: Optional[pd.DataFrame] = None,
         item_features: Optional[pd.DataFrame] = None,
+        toppop_mask: Optional[np.ndarray] = None,
     ) -> None:
-        self.df_interaction = self.get_interaction(df_interaction)
+        self.df_interaction, self.userDict, self.itemDict = self.get_interaction(
+            df_interaction
+        )
         self.n_users, self.n_items = self.df_interaction.max()[:2] + 1
         self.items = items
         self.user_features = user_features
@@ -34,8 +37,11 @@ class BaseRecommender(metaclass=ABCMeta):
         self.test_size = test_size
         self.random_split = random_split
         self.train_mat, self.test_mat = self.process_interaction()
+        self.toppop: np.ndarray = self._get_toppop(toppop_mask)
 
-    def get_interaction(self, df_interaction: pd.DataFrame) -> pd.DataFrame:
+    def get_interaction(
+        self, df_interaction: pd.DataFrame
+    ) -> Tuple[pd.DataFrame, Dict[str, int], Dict[str, int]]:
         """The converter for input dataframe
 
         Args:
@@ -46,26 +52,34 @@ class BaseRecommender(metaclass=ABCMeta):
 
         dataframe = df_interaction.iloc[:, :3]
         dataframe.columns = pd.Index(["userId", "itemId", "interaction"])
-        dataframe["userId"] = pd.Categorical(dataframe["userId"]).codes
-        dataframe["itemId"] = pd.Categorical(dataframe["itemId"]).codes
-        return dataframe
+        user_cat = pd.Categorical(dataframe["userId"])
+        item_cat = pd.Categorical(dataframe["itemId"])
+        dataframe["userId"] = user_cat.codes
+        dataframe["itemId"] = item_cat.codes
+        userDict = dict(zip(user_cat.categories, user_cat.codes))
+        itemDict = dict(zip(item_cat.categories, item_cat.codes))
+        return dataframe, userDict, itemDict
 
-    def process_interaction(self) -> Tuple[sps.coo_matrix, sps.coo_matrix]:
+    def process_interaction(self) -> Tuple[sps.coo_matrix, Optional[sps.coo_matrix]]:
         dataframe = self.df_interaction
-        if not (self.random_split) and self.test_size > 1:
-            train = dataframe.iloc[int(self.test_size) :, :]
-            test = dataframe.iloc[: int(self.test_size), :]
-        else:
-            train, test = train_test_split(
-                dataframe, test_size=self.test_size, random_state=42
+        if self.test_size != 0:
+            if not (self.random_split) and self.test_size > 1:
+                train = dataframe.iloc[int(self.test_size) :, :]
+                test = dataframe.iloc[: int(self.test_size), :]
+            else:
+                train, test = train_test_split(
+                    dataframe, test_size=self.test_size, random_state=42
+                )
+            test_mat = sps.coo_matrix(
+                (test.interaction, (test.userId, test.itemId)),
+                (self.n_users, self.n_items),
+                "int32",
             )
+        else:
+            train = dataframe
+            test_mat = None
         train_mat = sps.coo_matrix(
             (train.interaction, (train.userId, train.itemId)),
-            (self.n_users, self.n_items),
-            "int32",
-        )
-        test_mat = sps.coo_matrix(
-            (test.interaction, (test.userId, test.itemId)),
             (self.n_users, self.n_items),
             "int32",
         )
@@ -88,6 +102,14 @@ class BaseRecommender(metaclass=ABCMeta):
         item_features: Optional[sps.csr_matrix],
     ) -> np.ndarray:
         raise NotImplementedError("predict must be implemented.")
+
+    def _get_toppop(self, toppop_mask: Optional[np.ndarray]) -> np.ndarray:
+        scores = np.asarray(self.train_mat.sum(axis=0)).ravel()
+        if toppop_mask:
+            mask = np.zeros(scores.shape[0], dtype=bool)
+            mask[toppop_mask] = True
+            scores[mask] = 0
+        return (-scores).argsort().argsort()
 
     def predict_for_userId(self, user_id: int) -> np.ndarray:
         user_ids: np.ndarray = np.full(self.n_items, user_id)

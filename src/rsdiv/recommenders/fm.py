@@ -13,7 +13,7 @@ class FMRecommender(BaseRecommender):
     def __init__(
         self,
         interaction: pd.DataFrame,
-        items: pd.DataFrame,
+        items: Optional[pd.DataFrame],
         test_size: Union[float, int] = 0.3,
         random_split: bool = True,
         no_components: int = 10,
