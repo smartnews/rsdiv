@@ -58,7 +58,7 @@ author = "Yin Cheng, Jiayu Chang"
 # built documents.
 #
 # The short X.Y version.
-import rsdiv  # noqa
+# import rsdiv  # noqa
 
 # The full version, including alpha/beta/rc tags.
 release = "0.2.3"
