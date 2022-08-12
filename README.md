@@ -1,6 +1,6 @@
 # Rsdiv: Diversity improvement framework for recommender systems
 
-[![Python](https://img.shields.io/badge/python-3.6%7C3.7%7C3.8%7C3.9-red?logo=Python&logoColor=white)](https://www.python.org)
+[![Python](https://img.shields.io/badge/python3.8%7C3.9-red?logo=Python&logoColor=white)](https://www.python.org)
 [![PyPI](https://img.shields.io/pypi/v/rsdiv?color=green)](https://pypi.org/project/rsdiv/)
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/smartnews/rsdiv)
 
