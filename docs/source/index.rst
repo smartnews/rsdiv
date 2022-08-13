@@ -1,18 +1,18 @@
 .. rsdiv documentation master file
 
 
-rsdiv - reranking for multi-objective optimized recommender systems.
+rsdiv - Reranking for Multi-objective Optimized Recommender Systems
 ====================================================================
 
-**rsdiv** provide the measurements and improvements for the diversity of results.
+**rsdiv** provide the measurements and improvements for the multi-objective/diversifying tasks.
 
 This project provides:
 
-* various kinds of metrics to measure the quality of recommender systems from a quantitative view.
-* various implementations for diversifying algorithms and models.
+* various implementations of diversifying/ensemble reranking modules.
 * various implementations of core recommender algorithms.
-* benchmarks for comparing and further analysis.
-* hyperparameter optimization based on `Optuna <https://github.com/optuna/optuna>`_
+* evaluatations for recommender systems from a quantitative/visualize view.
+* easy-to-use benchmarks for comparing and further analysis.
+* automated hyperparameter optimization.
 
 Basic Usage
 -----------
