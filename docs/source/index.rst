@@ -40,8 +40,7 @@ Basic Usage
    :caption: Contents:
 
     Installation <installation>
-    Tutorial <tutorial_lastfm>
-    API Reference <api/index>
+    API Reference <api_reference>
     Resources <resources>
 
 Indices and tables
