@@ -1,18 +1,18 @@
 .. rsdiv documentation master file
 
 
-rsdiv
-====================================
+rsdiv - Reranking for Multi-objective Optimized Recommender Systems
+====================================================================
 
-Python package for recommender systems to provide the measurements and improvements for the diversity of results.
+**rsdiv** provides the measurements and improvements for the multi-objective/diversifying tasks.
 
 This project provides:
 
-* various kinds of metrics to measure the diversity of recommender systems from a quantitative view.
-* various implementations for diversifying algorithms and models.
+* various implementations of diversifying/ensemble reranking modules.
 * various implementations of core recommender algorithms.
-* benchmarks for comparing and further analysis.
-* hyperparameter optimization based on `Optuna <https://github.com/optuna/optuna>`_
+* evaluatations for recommender systems from a quantitative/visualize view.
+* easy-to-use benchmarks for comparing and further analysis.
+* automated hyperparameter optimization.
 
 Basic Usage
 -----------
@@ -40,8 +40,7 @@ Basic Usage
    :caption: Contents:
 
     Installation <installation>
-    Tutorial <tutorial_lastfm>
-    API Reference <api/index>
+    API Reference <api_reference>
     Resources <resources>
 
 Indices and tables
