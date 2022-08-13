@@ -4,7 +4,7 @@
 rsdiv - Reranking for Multi-objective Optimized Recommender Systems
 ====================================================================
 
-**rsdiv** provide the measurements and improvements for the multi-objective/diversifying tasks.
+**rsdiv** provides the measurements and improvements for the multi-objective/diversifying tasks.
 
 This project provides:
 
