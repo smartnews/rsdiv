@@ -12,3 +12,6 @@ src/rsdiv.egg-info/*
 
 # jupyter notebook
 .ipynb_checkpoints
+
+# docs build
+docs/source/api_reference/

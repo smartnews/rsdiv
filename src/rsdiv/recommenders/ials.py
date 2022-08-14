@@ -35,9 +35,8 @@ class IALSRecommender(BaseRecommender):
         self.train_mat = self.bm25(self.train_mat)
 
     def bm25(self, X: sps.coo_matrix, K1: int = 100, B: float = 0.8) -> sps.csr_matrix:
-        """Weighs each col of a sparse matrix X by BM25 weighting.
-        - `Taken from nearest_neighbours.py of implicit
-          <https://github.com/benfred/implicit/blob/main/implicit/nearest_neighbours.py>`_
+        r"""Weighs each col of a sparse matrix X by BM25 weighting.
+        Taken from `nearest_neighbours.py of implicit <https://github.com/benfred/implicit/blob/main/implicit/nearest_neighbours.py>`_
         """
 
         X = X.T
