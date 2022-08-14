@@ -14,27 +14,12 @@ This project provides:
 * easy-to-use benchmarks for comparing and further analysis.
 * automated hyperparameter optimization.
 
-Basic Usage
------------
 
-.. code-block:: python
+.. toctree::
+   :caption: Basic Usage
+   :maxdepth: 1
 
-    import rsdiv as rs
-
-    # prepare for a benchmark dataset
-    loader = rs.MovieLens1MDownLoader()
-    ratings = loader.read_ratings()
-    items = loader.read_items()
-
-    # evaluate the results in various aspects
-    metrics = rs.DiversityMetrics()
-    metrics.gini_coefficient(ratings['movieId'])
-
-    # train a recommender
-    rc = rs.FMRecommender(ratings, items).fit()
-
-    # improve the diversity
-    div = rs.MaximalMarginalRelevance()
+   notebooks/prepare-for-a-benchmark-dataset
 
 
 .. toctree::
