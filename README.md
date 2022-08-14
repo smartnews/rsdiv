@@ -5,15 +5,15 @@
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/smartnews/rsdiv)
 [![Read the Docs](https://readthedocs.org/projects/rsdiv/badge/?version=latest)](https://rsdiv.readthedocs.io/en/latest/)
 
-**rsdiv** provides the measurements and improvements for the multi-objective/diversifying tasks.
+**rsdiv** provides the measurements and improvements for the **multi-objective/diversifying** tasks.
 
 Some of its features include:
 
-- various implementations of diversifying/ensemble reranking modules.
-- various implementations of core recommender algorithms.
-- evaluations for recommender systems from a quantitative/visualize view.
-- easy-to-use benchmarks for comparing and further analysis.
-- automated hyperparameter optimization.
+- various implementations of **diversifying/ensemble** reranking modules.
+- various implementations of core **recommender algorithms**.
+- evaluations for recommender systems from a **quantitative/visual** view.
+- easy-to-use **benchmarks** for comparing and further analysis.
+- automated **hyperparameter** optimization.
 
 ## Installation
 
@@ -23,201 +23,21 @@ You can simply install the pre-build binaries with:
 pip install rsdiv
 ```
 
-Or you may want to build from the source:
-
-```bash
-cd rsdiv && pip install .
-```
+More installation options can be found [here](https://rsdiv.readthedocs.io/en/latest/installation.html).
 
 ## Basic Usage
 
-### Prepare for a benchmark dataset
+[Prepare for a benchmark dataset](https://rsdiv.readthedocs.io/en/latest/notebooks/prepare-for-a-benchmark-dataset.html)
 
-Load a benchmark, say, [MovieLens 1M Dataset](https://grouplens.org/datasets/movielens/1m/). This is a table benchmark dataset that contains 1 million ratings from 6000 users on 4000 movies.
+[Evaluate the results in various aspects](https://rsdiv.readthedocs.io/en/latest/notebooks/evaluate-the-results-in-various-aspects.html)
 
-```python
->>> import rsdiv as rs
->>> loader = rs.MovieLens1MDownLoader()
-```
+[Train and test a recommender](https://rsdiv.readthedocs.io/en/latest/notebooks/train-and-test-a-recommender.html)
 
-Get the user-item interactions (ratings):
-
-```python
->>> ratings = loader.read_ratings()
-```
-
-|    |   userId |   movieId |   rating | timestamp           |
-|---:|---------:|----------:|---------:|:--------------------|
-|  0 |        1 |      1193 |        5 | 2000-12-31 22:12:40 |
-|  1 |        1 |       661 |        3 | 2000-12-31 22:35:09 |
-|  ... |        ... |      ... |        ... | ... |
-| 1000207 |     6040 |      1096 |        4 | 2000-04-26 02:20:48|
-| 1000208 |     6040 |      1097 |        4 | 2000-04-26 02:19:29|
-
-Get the users' information:
-
-```python
->>> users = loader.read_users()
-```
-
-|    |   userId | gender   |   age |   occupation |   zipcode |
-|---:|---------:|:---------|------:|-------------:|----------:|
-|  0 |        1 | F        |     1 |           10 |     48067 |
-|  1 |        2 | M        |    56 |           16 |     70072 |
-|  ... |        ... | ...        |    ... |     ... |   ... |
-| 6038 |     6039 | F        |    45 |            0 |     01060 |
-| 6039 |     6040 | M        |    25 |            6 |     11106 |
-
-Get the items' information:
-
-```python
->>> items = loader.read_items()
-```
-
-|    |   movieId | title      | genres      |   release_date |
-|---:|----------:|:--------------|:-------|-------:|
-|  0 |         1 | Toy Story   | [\'Animation\', "Children\'s", \'Comedy\']  |   1995 |
-|  1 |         2 | Jumanji      | [\'Adventure\', "Children\'s", \'Fantasy\'] |   1995 |
-|  ... |   ... | ... | ...     |   ... |
-| 3881 | 3951 | Two Family House | ['Drama'] |   2000 |
-| 3882 | 3952 | Contender, The   | ['Drama', 'Thriller'] |  2000 |
-
-### Evaluate the results in various aspects
-
-Load the evaluator to analyze the results, say, the [Gini coefficient](https://en.wikipedia.org/wiki/Gini_coefficient) metric:
-
-```python
->>> metrics = rs.DiversityMetrics()
->>> metrics.gini_coefficient(ratings['movieId'])
->>> 0.6335616301416965
-```
-
-The nested input type (`List[List[str]]`-like) is also favorable. This is especially useful to evaluate the diversity on the topic scale:
-
-```python
->>> metrics.gini_coefficient(items['genres'])
->>> 0.5158655846858095
-```
-
-[Shannon Index](https://en.wikipedia.org/wiki/Diversity_index#Shannon_index) and [Effective Catalog Size](https://www.businessinsider.com/how-netflix-recommendations-work-2016-9) are also available with the same usage.
-
-### Show the distribution of a given data source
-
-The unbalance of the data distribution can be well illustrated by both barplot and sorted DataFrame:
-
-```python
->>> distribution = metrics.get_distribution(items['genres'])
-```
-
-![distribution](pics/distribution.png)
-
-```python
->>> distribution
-```
-
-|    | category    |   percentage |
-|---:|:------------|-------------:|
-|  0 | Drama       |   0.250156   |
-|  1 | Comedy      |   0.187266   |
-|  2 | Action      |   0.0784956  |
-|  ... | ...    |   ...   |
-| 16 | Western     |   0.0106117  |
-| 17 | Film-Noir   |   0.00686642 |
-
-### Draw a Lorenz curve graph for insights
-
-[Lorenz curve](https://en.wikipedia.org/wiki/Lorenz_curve) is a graphical representation of the distribution, the cumulative proportion of species is plotted against the cumulative proportion of individuals. This feature is also supported by **rsdiv** for helping practitioners' analysis.
-
-```python
-metrics.get_lorenz_curve(ratings['movieId'])
-```
-
-![Lorenz](pics/Lorenz.png)
-
-### Evaluate the unbalance from a sense of location
-
-**rsdiv** provides the encoders including geography encoding function to improve the intuitive understanding for practitioners, to start with the random values:
-
-```python
->>> geo = rs.GeoEncoder()
->>> df = geo.read_source()
->>> rng = np.random.default_rng(42)
->>> df['random_values'] = rng.rand(len(df))
->>> geo.draw_geo_graph(df, 'random_values', 'name')
-```
-
-![GeoEncoder](pics/random_values.png)
-
-### Train a recommender
-
-**rsdiv** provides various implementations of core recommender algorithms. To start with, a wrapper for `LightFM` is also supported:
-
-```python
->>> rc = rs.FMRecommender(ratings, items).fit()
-```
-
-30% of interactions are split for the test set by default, and the precision at the `top 5` can be calculated with:
-
-```python
->>> rc.precision_at_top_k(5)
->>> 0.15490067
-```
-
-the `top 100` unseen recommended items for an arbitrary user, say `userId: 1024`, can be simply given by:
-
-```python
->>> rc.predict_top_n_item(1024, 100)
-```
-
-|    |   itemId |   scores | title                                   | genres                                          |   release_date |
-|---:|------:|---------:|:-----------|:-----------|---------------:|
-|  0 |      916 | 1.77356  | Roman Holiday                           | [\'Comedy\', \'Romance\']                           |           1953 |
-|  1 |     1296 | 1.74696  | Room with a View                        | [\'Drama\', \'Romance\']                            |           1986 |
-|  ... |     ... | ...  | ...       | ...                |       ... |
-|  98 |     3079 | 0.371897  | Mansfield Park                        | [\'Drama\']                            |           1999 |
-|  99 |     2570 | 0.369199  | Walk on the Moon                      | [\'Drama\', \'Romance\']                            |           1999 |
-
-### Improve the diversity
-
-Not only for categorical labels, but **rsdiv** also supports embedding for items, for example, but the pre-trained 300-dim embedding based on wiki_en by fastText can also be simply imported as:
-
-```python
->>> emb = rs.FastTextEmbedder()
->>> emb.embedding_list(['Comedy', 'Romance'])
->>> array([-0.02061814,  0.06264187,  0.00729847, -0.04322025,  0.04619966, ...])
-```
-
-**rsdiv** supports various kinds of diversifying algorithms:
-
-- [Maximal Marginal Relevance](https://www.cs.cmu.edu/~jgc/publication/The_Use_MMR_Diversity_Based_LTMIR_1998.pdf), MMR diversify algorithm:
-
-```python
-div = rs.MaximalMarginalRelevance()
-```
-
-- Modified Gram-Schmidt, MGS diversify algorithm, also known as SSD([Sliding Spectrum Decomposition](https://arxiv.org/pdf/2107.05204.pdf)):
-
-```python
-div = rs.SlidingSpectrumDecomposition()
-```
-
-The pseudocode codes are:
-
-```python
-for i = 1 to n
-    v[i] = a[i]
-for i = 1 to n
-    r[i][i] = ‖v[i]‖
-    q[i] = v[i] / r[i][i]
-    for j = i+1 to n
-        r[i][j] = q[i][*]v[j]
-        v[j] = v[j] - r[i][j]q[i]
-```
-
-The objective could be formed as:
-$\max\limits_{j\in\mathcal{Y}\backslash Y}\left[r_j+\lambda\left||P_{\perp q_j}\right|| \prod\limits_{i\in Y}^{}\left||P_{\perp q_i}\right||\right]$
+[Reranking for diversity](https://rsdiv.readthedocs.io/en/latest/notebooks/reranking-for-diversity.html)
 
 ## TODO
+
+### More diversifying algorithms
 
 - implement the Bounded Greedy Selection Strategy, BGS diversify algorithm
 
@@ -226,6 +46,10 @@ $\max\limits_{j\in\mathcal{Y}\backslash Y}\left[r_j+\lambda\left||P_{\perp q_j}\
 ### Hyperparameter optimization
 
 - compatible with [Optuna](https://github.com/optuna/optuna).
+
+### Ensemble ranking
+
+- support the ensemble ranking modules
 
 ## For developers
 

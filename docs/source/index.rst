@@ -6,38 +6,27 @@ rsdiv - Reranking for Multi-objective Optimized Recommender Systems
 
 **rsdiv** provides the measurements and improvements for the multi-objective/diversifying tasks.
 
-This project provides:
+Some of its features include:
 
-* various implementations of diversifying/ensemble reranking modules.
-* various implementations of core recommender algorithms.
-* evaluations for recommender systems from a quantitative/visualize view.
-* easy-to-use benchmarks for comparing and further analysis.
-* automated hyperparameter optimization.
-
-Basic Usage
------------
-
-.. code-block:: python
-
-    import rsdiv as rs
-
-    # prepare for a benchmark dataset
-    loader = rs.MovieLens1MDownLoader()
-
-    # evaluate the results in various aspects
-    metrics = rs.DiversityMetrics()
-    metrics.gini_coefficient(ratings['movieId'])
-
-    # train a recommender
-    rc = rs.FMRecommender(ratings, items).fit()
-
-    # improve the diversity
-    div = rs.MaximalMarginalRelevance()
+* various implementations of **diversifying/ensemble** reranking modules.
+* various implementations of core **recommender algorithms**.
+* evaluations for recommender systems from a **quantitative/visual** view.
+* easy-to-use **benchmarks** for comparing and further analysis.
+* automated **hyperparameter** optimization.
 
 
 .. toctree::
+   :caption: Basic Usage
+   :maxdepth: 1
+
+   notebooks/prepare-for-a-benchmark-dataset
+   notebooks/evaluate-the-results-in-various-aspects
+   notebooks/train-and-test-a-recommender
+   notebooks/reranking-for-diversity
+
+.. toctree::
    :maxdepth: 2
-   :caption: Contents:
+   :caption: Contents
 
     Installation <installation>
     API Reference <api_reference>
@@ -47,5 +36,4 @@ Indices and tables
 ==================
 
 * :ref:`genindex`
-* :ref:`modindex`
 * :ref:`search`
