@@ -1,18 +1,19 @@
-# Rsdiv: Diversity improvement framework for recommender systems
+# Rsdiv: Reranking for Multi-objective Optimized Recommender Systems
 
 [![Python](https://img.shields.io/badge/python3.8%7C3.9-red?logo=Python&logoColor=white)](https://www.python.org)
 [![PyPI](https://img.shields.io/pypi/v/rsdiv?color=green)](https://pypi.org/project/rsdiv/)
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/smartnews/rsdiv)
+[![Read the Docs](https://readthedocs.org/projects/rsdiv/badge/?version=latest)](https://rsdiv.readthedocs.io/en/latest/)
 
-**rsdiv** is a Python package for recommender systems to provide the measurements and improvements for the diversity of results.
+**rsdiv** provides the measurements and improvements for the multi-objective/diversifying tasks.
 
 Some of its features include:
 
-- various kinds of metrics to measure the diversity of recommender systems from a quantitative view.
-- various implementations for diversifying algorithms and models.
+- various implementations of diversifying/ensemble reranking modules.
 - various implementations of core recommender algorithms.
-- benchmarks for comparing and further analysis.
-- hyperparameter optimization based on [Optuna](https://github.com/optuna/optuna).
+- evaluations for recommender systems from a quantitative/visualize view.
+- easy-to-use benchmarks for comparing and further analysis.
+- automated hyperparameter optimization.
 
 ## Installation
 

@@ -10,6 +10,18 @@ R = TypeVar("R", bound="BaseRecommender")
 
 
 class BaseRecommender(metaclass=ABCMeta):
+    """Defines a common interface for all recommendation models
+
+    Args:
+        df_interaction (pd.DataFrame): user/item interaction for train/test.
+        item (pd.DataFrame): side information for items.
+        test_size (float|int): indicates whether and how to do the test.
+        random_split (bool): random split or not.
+        user_features (pd.DataFrame): user feature columns.
+        item_features (pd.DataFrame): item feature columns.
+
+    """
+
     df_interaction: pd.DataFrame
     items: pd.DataFrame
     test_size: Union[float, int]
