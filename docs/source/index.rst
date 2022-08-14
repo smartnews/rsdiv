@@ -23,6 +23,8 @@ Basic Usage
 
     # prepare for a benchmark dataset
     loader = rs.MovieLens1MDownLoader()
+    ratings = loader.read_ratings()
+    items = loader.read_items()
 
     # evaluate the results in various aspects
     metrics = rs.DiversityMetrics()
@@ -40,6 +42,7 @@ Basic Usage
    :caption: Contents:
 
     Installation <installation>
+    Basic Usage <basic_usage>
     API Reference <api_reference>
     Resources <resources>
 
@@ -47,5 +50,4 @@ Indices and tables
 ==================
 
 * :ref:`genindex`
-* :ref:`modindex`
 * :ref:`search`
