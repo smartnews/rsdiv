@@ -6,7 +6,6 @@
 {{ name | underline}}
 
 .. autoclass:: {{ name }}
-    :noindex:
     :members:
     :inherited-members:
     :show-inheritance:
