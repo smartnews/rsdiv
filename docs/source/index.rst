@@ -22,7 +22,7 @@ Some of its features include:
    notebooks/prepare-for-a-benchmark-dataset
    notebooks/evaluate-the-results-in-various-aspects
    notebooks/train-and-test-a-recommender
-   notebooks/rerank-for-diversity
+   notebooks/reranking-for-diversity
 
 .. toctree::
    :maxdepth: 2
