@@ -19,5 +19,5 @@ Get the user-item interactions (ratings):
 
 .. csv-table:: Table user-item Interactions
    :file: tables/interactions.csv
-   :widths: 25, 25, 10, 10, 30
+   :widths: 20, 20, 20, 10, 30
    :header-rows: 1
