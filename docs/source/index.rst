@@ -20,10 +20,11 @@ This project provides:
    :maxdepth: 1
 
    notebooks/prepare-for-a-benchmark-dataset
+   notebooks/evaluate-the-results-in-various-aspects
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
+   :caption: Contents
 
     Installation <installation>
     API Reference <api_reference>
