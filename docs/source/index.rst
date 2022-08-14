@@ -21,6 +21,7 @@ This project provides:
 
    notebooks/prepare-for-a-benchmark-dataset
    notebooks/evaluate-the-results-in-various-aspects
+   notebooks/train-and-test-a-recommender
 
 .. toctree::
    :maxdepth: 2
