@@ -21,13 +21,11 @@ This project provides:
 
    notebooks/prepare-for-a-benchmark-dataset
 
-
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
     Installation <installation>
-    Basic Usage <basic_usage>
     API Reference <api_reference>
     Resources <resources>
 
