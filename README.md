@@ -33,7 +33,7 @@ More installation options can be found [here](https://rsdiv.readthedocs.io/en/la
 
 [Train and test a recommender](https://rsdiv.readthedocs.io/en/latest/notebooks/train-and-test-a-recommender.html)
 
-[Reranking for diversity](https://rsdiv.readthedocs.io/en/latest/notebooks/reranking-for-diversity.html)
+[Reranking for diversity improvement](https://rsdiv.readthedocs.io/en/latest/notebooks/reranking-for-diversity.html)
 
 ## TODO
 

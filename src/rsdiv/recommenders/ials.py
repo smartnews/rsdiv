@@ -1,10 +1,10 @@
-from typing import List, Optional, Union
+from typing import List, Optional, Tuple, Union
 
 import numpy as np
 import pandas as pd
 from implicit.als import AlternatingLeastSquares
+from implicit.evaluation import AUC_at_k, precision_at_k
 from scipy import sparse as sps
-from sklearn.metrics import roc_auc_score
 
 from .base import BaseRecommender
 
@@ -51,7 +51,7 @@ class IALSRecommender(BaseRecommender):
     def _fit(self) -> None:
         self.ials.fit(2 * self.train_mat)
 
-    def recommend(self, user_ids: np.ndarray) -> tuple:
+    def recommend(self, user_ids: List[int]) -> tuple:
         ids, scores = self.ials.recommend(
             user_ids, self.train_mat[user_ids], N=self.n_items
         )
@@ -66,31 +66,11 @@ class IALSRecommender(BaseRecommender):
         else:
             return self.toppop
 
-    def auc_score(self) -> float:
-        test: pd.DataFrame = self.df_interaction.head(self.test_size)
-        user_ids: np.ndarray = test["userId"]
-        item_ids: np.ndarray = test["itemId"]
-        prediction: np.ndarray = self.predict(user_ids, item_ids)
-        label: np.ndarray = np.asarray(
-            [0 if item == 0 else 1 for item in test["interaction"]]
-        )
-        return float(roc_auc_score(label, prediction))
+    def auc_score(self, top_k: int = 100) -> float:
+        return float(AUC_at_k(self.ials, self.train_mat, self.test_mat, K=top_k))
 
     def precision_at_top_k(self, top_k: int = 100) -> float:
-        test: pd.DataFrame = self.df_interaction.head(self.test_size)
-        check = test[test["interaction"] == 1].copy()
-        user_ids: np.ndarray = check["userId"]
-        item_ids: np.ndarray = check["itemId"]
-        result = self.ials.recommend(
-            user_ids,
-            self.train_mat[user_ids],
-            N=top_k,
-            filter_already_liked_items=False,
-        )
-        precision = sum([item in row for row, item in zip(result[0], item_ids)]) / len(
-            check
-        )
-        return float(precision)
+        return float(precision_at_k(self.ials, self.train_mat, self.test_mat, K=top_k))
 
     def get_item_factors(self) -> np.ndarray:
         return np.asarray(self.ials.item_factors)
@@ -116,3 +96,20 @@ class IALSRecommender(BaseRecommender):
             [user @ item for user, item in zip(user_factors, item_factors)]
         )
         return predict_array
+
+    def rerank_preprocess(
+        self, user_id: int, truncate_at: int, category_col: str, embedding_col: str
+    ) -> Tuple:
+        item_clean = self.clean_items()
+        category = item_clean[category_col].to_list()
+        embedding = np.stack(item_clean[embedding_col])
+
+        org_rank = self.recommend([user_id])[0][0]
+        org_scores = self.recommend([user_id])[1][0]
+
+        relevance_scores = org_scores[:truncate_at]
+        org_select = org_rank[:truncate_at]
+        similarity_scores = embedding[org_select]
+        similarity_matrix = similarity_scores @ similarity_scores.T
+
+        return (org_select, category, relevance_scores, similarity_matrix)

@@ -53,7 +53,7 @@ class BaseRecommender(metaclass=ABCMeta):
 
     def get_interaction(
         self, df_interaction: pd.DataFrame
-    ) -> Tuple[pd.DataFrame, Dict[str, int], Dict[str, int]]:
+    ) -> Tuple[pd.DataFrame, Dict, Dict]:
         """The converter for input dataframe
 
         Args:
@@ -68,20 +68,22 @@ class BaseRecommender(metaclass=ABCMeta):
         item_cat = pd.Categorical(dataframe["itemId"])
         dataframe["userId"] = user_cat.codes
         dataframe["itemId"] = item_cat.codes
-        userDict = dict(zip(user_cat.categories, user_cat.codes))
-        itemDict = dict(zip(item_cat.categories, item_cat.codes))
+        userDict = dict(enumerate(user_cat.categories))
+        itemDict = dict(enumerate(item_cat.categories))
         return dataframe, userDict, itemDict
 
     def process_interaction(self) -> Tuple[sps.coo_matrix, Optional[sps.coo_matrix]]:
         dataframe = self.df_interaction
+
+        if self.random_split:
+            dataframe = dataframe.sample(frac=1, random_state=42).reset_index(drop=True)
+
+        self.df_interaction = dataframe
+
         if self.test_size != 0:
-            if not (self.random_split) and self.test_size > 1:
-                train = dataframe.iloc[int(self.test_size) :, :]
-                test = dataframe.iloc[: int(self.test_size), :]
-            else:
-                train, test = train_test_split(
-                    dataframe, test_size=self.test_size, random_state=42
-                )
+            train, test = train_test_split(
+                dataframe, test_size=self.test_size, shuffle=False
+            )
             test_mat = sps.coo_matrix(
                 (test.interaction, (test.userId, test.itemId)),
                 (self.n_users, self.n_items),
@@ -96,6 +98,22 @@ class BaseRecommender(metaclass=ABCMeta):
             "int32",
         )
         return train_mat, test_mat
+
+    def clean_items(self) -> pd.DataFrame:
+        invmap = {v: k for k, v in self.itemDict.items()}
+        self.items["encodes"] = self.items["itemId"].apply(
+            lambda x: self._encode(x, invmap)
+        )
+        clean_items = self.items.sort_values(by=["encodes"]).dropna()
+        clean_items["encodes"] = clean_items["encodes"].apply(int)
+        return clean_items
+
+    def _encode(self, id: int, invmap: Dict) -> Optional[int]:
+        try:
+            code = invmap[id]
+            return int(code)
+        except:
+            return None
 
     def fit(self: R) -> R:
         self._fit()
