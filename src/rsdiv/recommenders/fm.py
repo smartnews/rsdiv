@@ -10,6 +10,16 @@ from .base import BaseRecommender
 
 
 class FMRecommender(BaseRecommender):
+    """FM recommender based on `LightFM`.
+
+    Args:
+        interaction (pd.DataFrame): user-item interaction matrix.
+        items (Optional[pd.DataFrame]): item side information.
+        no_components (int): the dimensions of user/item embeddings.
+        item_alpha (float): L2 penalty on item features.
+        user_alpha (float): L2 penalty on user features.
+    """
+
     def __init__(
         self,
         interaction: pd.DataFrame,

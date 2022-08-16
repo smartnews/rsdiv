@@ -10,6 +10,16 @@ from .base import BaseRecommender
 
 
 class IALSRecommender(BaseRecommender):
+    """iALS recommender based on `implicit`.
+
+    Args:
+        interaction (pd.DataFrame): user-item interaction matrix.
+        items (Optional[pd.DataFrame]): item side information.
+        factors (int): the dimensions of user/item embeddings.
+        regularization (float): regularization coefficient.
+        alpha (float): the unobserved weight.
+    """
+
     def __init__(
         self,
         df_interaction: pd.DataFrame,
