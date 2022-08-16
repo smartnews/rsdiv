@@ -8,6 +8,8 @@ norm = np.linalg.norm
 
 
 class SlidingSpectrumDecomposition(BaseReranker):
+    """Improve the diversity with Sliding Spectrum Decomposition algorithm."""
+
     def __init__(self, gamma: float):
         assert gamma >= 0, "gamma should be >= 0!"
         self.gamma = gamma

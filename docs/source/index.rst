@@ -25,7 +25,7 @@ Some of its features include:
    notebooks/reranking-for-diversity
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: Contents
 
     Installation <installation>

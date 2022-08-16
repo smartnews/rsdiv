@@ -7,6 +7,8 @@ from urllib.request import urlretrieve
 
 
 class BaseDownloader(metaclass=ABCMeta):
+    """Base downloader for all Movielens datasets."""
+
     DOWNLOAD_URL: str
     DEFAULT_PATH: str
 
