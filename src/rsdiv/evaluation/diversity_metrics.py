@@ -9,6 +9,11 @@ from scipy.stats import entropy
 
 
 class DiversityMetrics:
+    """Metrics to evalutate the diversity level of recommended results.
+
+    gini-coefficient/ECS/shannon-index/histogram are supported.
+    """
+
     clist: List[Tuple] = [(0, "red"), (0.5, "orange"), (1, "yellow")]
 
     @staticmethod

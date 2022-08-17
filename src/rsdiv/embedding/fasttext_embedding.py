@@ -8,6 +8,8 @@ from .base import BaseEmbedder
 
 
 class FastTextEmbedder(BaseEmbedder):
+    """Embedding extracted from `fastText` for Movielens dataset."""
+
     EMB_PATH: Optional[bytes] = pkgutil.get_data(
         "rsdiv.embedding", "cc.en.300.movielens.pkl"
     )

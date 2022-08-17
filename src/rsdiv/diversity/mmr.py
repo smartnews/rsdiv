@@ -7,6 +7,8 @@ from .base import BaseReranker
 
 
 class MaximalMarginalRelevance(BaseReranker):
+    """Improve the diversity with Maximal Marginal Relevance algorithm."""
+
     def __init__(self, lbd: float):
         assert 0 <= lbd <= 1, "lbd should be within the interval [0, 1]!"
         self.lbd = lbd

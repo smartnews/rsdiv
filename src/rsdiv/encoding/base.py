@@ -3,6 +3,8 @@ from typing import Any, Dict, List, Union
 
 
 class BaseEncoder(metaclass=ABCMeta):
+    """Base encoder for all encodes' mappings."""
+
     encode_source: Dict[str, Any]
 
     @abstractmethod

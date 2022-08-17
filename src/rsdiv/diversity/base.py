@@ -1,10 +1,12 @@
 from abc import ABC, abstractmethod
-from typing import Optional, Sequence
+from typing import Sequence
 
 import numpy as np
 
 
 class BaseReranker(ABC):
+    """Base reranker for all diversifiers."""
+
     @abstractmethod
     def rerank(
         self,

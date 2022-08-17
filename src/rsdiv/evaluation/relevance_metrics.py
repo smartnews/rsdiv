@@ -46,6 +46,8 @@ class RelevanceMetricsBase(ABC):
 
 
 class CosineRelevanceMetric(RelevanceMetricsBase):
+    """Relevance metric based on cosine distance."""
+
     @staticmethod
     def get_similarity_scores(query: np.ndarray, candidates: np.ndarray) -> np.ndarray:
         return np.asarray(
@@ -65,6 +67,8 @@ class CosineRelevanceMetric(RelevanceMetricsBase):
 
 
 class InnerProductRelevanceMetric(RelevanceMetricsBase):
+    """Relevance metric based on inner-product."""
+
     @staticmethod
     def get_similarity_scores(query: np.ndarray, candidates: np.ndarray) -> np.ndarray:
         return np.asarray(query @ candidates.T)

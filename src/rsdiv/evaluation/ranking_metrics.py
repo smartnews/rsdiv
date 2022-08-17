@@ -6,6 +6,8 @@ T = TypeVar("T", bound=Hashable)
 
 
 class RankingMetrics:
+    """Ranking metrics to evaluate the recommended quality: DCG/nDCG/MAP."""
+
     @staticmethod
     def DCG(recommended_scores: np.ndarray) -> float:
         score: float = np.sum(

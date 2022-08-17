@@ -7,6 +7,8 @@ from .base import BaseDownloader
 
 
 class MovieLens100KDownLoader(BaseDownloader):
+    """MovieLens dataset downLoader for 100K interactions."""
+
     DOWNLOAD_URL: str = "http://files.grouplens.org/datasets/movielens/ml-100k.zip"
     DEFAULT_PATH: str = os.path.join(os.getcwd(), "ml-100k")
 
