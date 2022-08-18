@@ -35,7 +35,6 @@ Diversity
     :toctree: api_reference
     :nosignatures:
 
-    BaseReranker
     MaximalMarginalRelevance
     SlidingSpectrumDecomposition
 
