@@ -28,7 +28,7 @@ setup(
     long_description=LONG_DESCRIPTION,
     long_description_content_type="text/markdown",
     url="https://github.com/smartnews/rsdiv",
-    python_requires=">=3.6",
+    python_requires=">=3.8",
     packages=find_packages("src"),
     package_dir={"": "src"},
     install_requires=install_requires,
