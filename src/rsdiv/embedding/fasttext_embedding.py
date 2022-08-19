@@ -18,11 +18,27 @@ class FastTextEmbedder(BaseEmbedder):
 
     @classmethod
     def _l2_norm(cls, vector: np.ndarray) -> float:
+        """Internal method to calculate the normalize of a given vector.
+
+        Args:
+            vector (np.ndarray): target vector to be normalized.
+
+        Returns:
+            float: the l2 norm value for the given vector.
+        """
         norm_val: float = np.sqrt(np.sum(vector**2))
         return norm_val
 
     @classmethod
     def embedding_norm(cls, org: str) -> np.ndarray:
+        """Normalize a given vector.
+
+        Args:
+            org (str): target string to generate the embedding.
+
+        Returns:
+            np.ndarray: normalized vector.
+        """
         vector: np.ndarray = cls.embedding_single(org)
         norm_val: float = cls._l2_norm(vector)
         if norm_val:
@@ -33,6 +49,14 @@ class FastTextEmbedder(BaseEmbedder):
 
     @classmethod
     def embedding_list(cls, org: List[str]) -> np.ndarray:
+        """Normalize a summation of a list of vectors.
+
+        Args:
+            org (List[str]): target list of strings.
+
+        Returns:
+            np.ndarray: normalized vector.
+        """
         emb_list: np.ndarray = np.asarray([cls.embedding_norm(item) for item in org])
         emb_norm: np.ndarray = np.mean(emb_list, axis=0)
         return emb_norm
