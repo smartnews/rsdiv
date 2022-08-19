@@ -11,4 +11,12 @@ class BaseEmbedder(metaclass=ABCMeta):
 
     @classmethod
     def embedding_single(cls, org: str) -> np.ndarray:
+        """Base method to embed the single string.
+
+        Args:
+            org (str): target string to be embedded.
+
+        Returns:
+            np.ndarray: embedding vector for the given string.
+        """
         return cls.MAPPER[org]
