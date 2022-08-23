@@ -61,8 +61,11 @@ class BaseRecommender(metaclass=ABCMeta):
                 columns should be ["userId", "itemId", "interaction"]
 
         """
-
-        dataframe = df_interaction.iloc[:, :3]
+        if df_interaction.shape[1] == 2:
+            dataframe = df_interaction.iloc[:, :2]
+            dataframe["interaction"] = 1
+        else:
+            dataframe = df_interaction.iloc[:, :3]
         dataframe.columns = pd.Index(["userId", "itemId", "interaction"])
         user_cat = pd.Categorical(dataframe["userId"])
         item_cat = pd.Categorical(dataframe["itemId"])
