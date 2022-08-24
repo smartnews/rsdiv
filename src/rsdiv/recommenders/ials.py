@@ -68,13 +68,23 @@ class IALSRecommender(BaseRecommender):
         id_list: List = [list(id) for id in ids]
         return (id_list, scores)
 
-    def recommend_single(self, user_token: str, top_k: int = 100) -> np.ndarray:
-        if user_token in self.userDict:
-            user_id = self.userDict[user_token]
+    def recommend_single(self, user_token: str, top_k: int = 100) -> List:
+        """Recommend for single user with `top_k` items.
+
+        Args:
+            user_token (str): the original token string for user.
+            top_k (int, optional): `top_k` items to be recommended. Defaults to 100.
+
+        Returns:
+            List: a list of recommended item ids.
+        """
+        if user_token in self.user_list:
+            user_id = self.user_list.index(user_token)
             ids, _ = self.ials.recommend(user_id, self.train_mat[user_id], N=top_k)
-            return np.asarray(ids)
+            indice = np.asarray(ids)
         else:
-            return self.toppop
+            indice = self.toppop[:top_k]
+        return [self.item_list[index] for index in indice]
 
     def auc_score(self, top_k: int = 100) -> float:
         return float(AUC_at_k(self.ials, self.train_mat, self.test_mat, K=top_k))
