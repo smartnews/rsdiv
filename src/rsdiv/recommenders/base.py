@@ -1,5 +1,5 @@
 from abc import ABCMeta, abstractmethod
-from typing import Dict, Optional, Tuple, TypeVar, Union
+from typing import Dict, List, Optional, Tuple, TypeVar, Union
 
 import numpy as np
 import pandas as pd
@@ -39,7 +39,7 @@ class BaseRecommender(metaclass=ABCMeta):
         item_features: Optional[pd.DataFrame] = None,
         toppop_mask: Optional[np.ndarray] = None,
     ) -> None:
-        self.df_interaction, self.userDict, self.itemDict = self.get_interaction(
+        self.df_interaction, self.user_list, self.item_list = self.get_interaction(
             df_interaction
         )
         self.n_users, self.n_items = self.df_interaction.max()[:2] + 1
@@ -53,7 +53,7 @@ class BaseRecommender(metaclass=ABCMeta):
 
     def get_interaction(
         self, df_interaction: pd.DataFrame
-    ) -> Tuple[pd.DataFrame, Dict, Dict]:
+    ) -> Tuple[pd.DataFrame, List, List]:
         """The converter for input dataframe
 
         Args:
@@ -71,9 +71,9 @@ class BaseRecommender(metaclass=ABCMeta):
         item_cat = pd.Categorical(dataframe["itemId"])
         dataframe["userId"] = user_cat.codes
         dataframe["itemId"] = item_cat.codes
-        userDict = dict(enumerate(user_cat.categories))
-        itemDict = dict(enumerate(item_cat.categories))
-        return dataframe, userDict, itemDict
+        user_list = list(user_cat.categories)
+        item_list = list(item_cat.categories)
+        return dataframe, user_list, item_list
 
     def process_interaction(self) -> Tuple[sps.coo_matrix, Optional[sps.coo_matrix]]:
         dataframe = self.df_interaction
@@ -103,7 +103,7 @@ class BaseRecommender(metaclass=ABCMeta):
         return train_mat, test_mat
 
     def clean_items(self) -> pd.DataFrame:
-        invmap = {v: k for k, v in self.itemDict.items()}
+        invmap = {v: k for k, v in enumerate(self.item_list)}
         self.items["encodes"] = self.items["itemId"].apply(
             lambda x: self._encode(x, invmap)
         )
