@@ -172,3 +172,37 @@ class BaseRecommender(metaclass=ABCMeta):
             by="scores", ascending=False, ignore_index=True
         )
         return candidates.merge(self.items, how="left", on="itemId")
+
+    def get_user_id(self, user_string: str) -> Optional[int]:
+        """Get the `user_id` for a given `user_string`.
+
+        Args:
+            user_string (str): Original user string.
+
+        Returns:
+            Optional[int]:
+                The index of user_id in `user_list`.
+                Return `None` it not in training set.
+        """
+        try:
+            user_id = self.user_list.index(user_string)
+        except:
+            user_id = None
+        return user_id
+
+    def get_item_id(self, item_string: str) -> Optional[int]:
+        """Get the `item_id` for a given `item_string`.
+
+        Args:
+            item_string (str): Original item string.
+
+        Returns:
+            Optional[int]:
+                The index of item_id in `item_list`.
+                Return `None` it not in training set.
+        """
+        try:
+            item_id = self.item_list.index(item_string)
+        except:
+            item_id = None
+        return item_id
