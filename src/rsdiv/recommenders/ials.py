@@ -103,6 +103,30 @@ class IALSRecommender(BaseRecommender):
         mask[keep_row] = False
         self.ials.item_factors[mask] = 0
 
+    def get_score_single_user(
+        self, user_string: str, keep_indices: np.ndarray
+    ) -> Optional[np.ndarray]:
+        """Get the single user's predictions scores for the filtered items.
+        Return `None` for new users.
+
+        Args:
+            user_string (str): Original user token string.
+            keep_indices (np.ndarray): Items to be kept based on filters.
+
+        Returns:
+            Optional[np.ndarray]:
+                Predictions for the given items.
+                Return `None` for new users.
+        """
+        user_id = self.get_user_id(user_string)
+        if user_id:
+            user_factor = self.get_user_factors()[user_id]
+            item_factors = self.get_item_factors()[keep_indices]
+            scores = np.asarray(user_factor @ item_factors.T)
+            return scores
+        else:
+            return None
+
     def predict(
         self,
         user_ids: np.ndarray,
