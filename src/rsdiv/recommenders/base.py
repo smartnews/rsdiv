@@ -58,15 +58,12 @@ class BaseRecommender(metaclass=ABCMeta):
 
         Args:
             df_interaction(pd.DataFrame): user/item interaction matrix.
-                columns should be ["userId", "itemId", "interaction"]
+                columns should be ["userId", "itemId"]
 
         """
-        if df_interaction.shape[1] == 2:
-            dataframe = df_interaction.iloc[:, :2]
-            dataframe["interaction"] = 1
-        else:
-            dataframe = df_interaction.iloc[:, :3]
-        dataframe.columns = pd.Index(["userId", "itemId", "interaction"])
+        dataframe = df_interaction.iloc[:, :2]
+        dataframe.columns = pd.Index(["userId", "itemId"])
+        dataframe["itemId"] = dataframe["itemId"].apply(str)
         user_cat = pd.Categorical(dataframe["userId"])
         item_cat = pd.Categorical(dataframe["itemId"])
         dataframe["userId"] = user_cat.codes
@@ -82,13 +79,14 @@ class BaseRecommender(metaclass=ABCMeta):
             dataframe = dataframe.sample(frac=1, random_state=42).reset_index(drop=True)
 
         self.df_interaction = dataframe
+        dataframe["interaction"] = 1
 
         if self.test_size != 0:
             train, test = train_test_split(
                 dataframe, test_size=self.test_size, shuffle=False
             )
             test_mat = sps.coo_matrix(
-                (test.interaction, (test.userId, test.itemId)),
+                (np.ones(len(test)), (test.userId, test.itemId)),
                 (self.n_users, self.n_items),
                 "int32",
             )
@@ -96,7 +94,7 @@ class BaseRecommender(metaclass=ABCMeta):
             train = dataframe
             test_mat = None
         train_mat = sps.coo_matrix(
-            (train.interaction, (train.userId, train.itemId)),
+            (np.ones(len(train)), (train.userId, train.itemId)),
             (self.n_users, self.n_items),
             "int32",
         )
