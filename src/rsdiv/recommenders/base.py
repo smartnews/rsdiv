@@ -204,3 +204,17 @@ class BaseRecommender(metaclass=ABCMeta):
         except:
             item_id = None
         return item_id
+
+    def get_topk_indices(self, scores: np.ndarray, top_k: int) -> np.ndarray:
+        """Get the indices correspond to the topk items.
+
+        Args:
+            scores (np.ndarray): Scores given by the models.
+            top_k (int): Numbers of top items to be kept.
+
+        Returns:
+            np.ndarray: Indices for `top_k` items.
+        """
+        indices = np.argpartition(scores, -top_k)[-top_k:]
+        sorted_indices = indices[np.argsort(scores[indices])[::-1]]
+        return np.asarray(sorted_indices)
