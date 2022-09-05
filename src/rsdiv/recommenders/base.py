@@ -37,7 +37,7 @@ class BaseRecommender(metaclass=ABCMeta):
         random_split: bool,
         user_features: Optional[pd.DataFrame] = None,
         item_features: Optional[pd.DataFrame] = None,
-        toppop_mask: Optional[np.ndarray] = None,
+        toppop_keep: Optional[np.ndarray] = None,
     ) -> None:
         self.df_interaction, self.user_list, self.item_list = self.get_interaction(
             df_interaction
@@ -49,7 +49,7 @@ class BaseRecommender(metaclass=ABCMeta):
         self.test_size = test_size
         self.random_split = random_split
         self.train_mat, self.test_mat = self.process_interaction()
-        self.toppop: np.ndarray = self._get_toppop(toppop_mask)
+        self.toppop: np.ndarray = self._get_toppop_keep(toppop_keep)
 
     def get_interaction(
         self, df_interaction: pd.DataFrame
@@ -134,13 +134,25 @@ class BaseRecommender(metaclass=ABCMeta):
     ) -> np.ndarray:
         raise NotImplementedError("predict must be implemented.")
 
-    def _get_toppop(self, toppop_mask: Optional[np.ndarray]) -> np.ndarray:
+    def _get_toppop_keep(self, toppop_keep: Optional[np.ndarray]) -> np.ndarray:
+        """Get the top popular indices for items.
+
+        Args:
+            toppop_keep (Optional[np.ndarray]): The indices of items to be kept.
+
+        Returns:
+            np.ndarray:
+                Top popular indices of items.
+                Return all top popular if `toppop_keep` is not assigned.
+        """
         scores = np.asarray(self.train_mat.sum(axis=0)).ravel()
-        if toppop_mask:
-            mask = np.zeros(scores.shape[0], dtype=bool)
-            mask[toppop_mask] = True
+        if toppop_keep is not None:
+            mask = np.ones(scores.shape[0], dtype=bool)
+            mask[toppop_keep] = False
             scores[mask] = 0
-        return (-scores).argsort().argsort()
+            return (-scores).argsort()[: len(toppop_keep)]
+        else:
+            return (-scores).argsort()
 
     def predict_for_userId(self, user_id: int) -> np.ndarray:
         user_ids: np.ndarray = np.full(self.n_items, user_id)

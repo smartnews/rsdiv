@@ -127,6 +127,33 @@ class IALSRecommender(BaseRecommender):
         else:
             return None
 
+    def get_topk_single_user(
+        self,
+        user_string: str,
+        keep_indices: np.ndarray,
+        top_k: int,
+    ) -> np.ndarray:
+        """Get the recommended item ids for a given user id.
+
+        Args:
+            user_string (str): User id string.
+            keep_indices (np.ndarray): Indices for items to be kept.
+            top_k (int): Top-k items to be recommended.
+
+        Returns:
+            np.ndarray:
+                Recommended items ids.
+                Return `toppop` for new users.
+        """
+        scores = self.get_score_single_user(user_string, keep_indices)
+        if scores is None:
+            original_indices = self._get_toppop_keep(keep_indices)
+        else:
+            rank = self.get_topk_indices(scores, top_k)
+            original_indices = keep_indices[rank]
+        topk_items = np.asarray([self.item_list[index] for index in original_indices])
+        return topk_items
+
     def predict(
         self,
         user_ids: np.ndarray,
