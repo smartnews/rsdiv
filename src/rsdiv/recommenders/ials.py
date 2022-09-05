@@ -147,7 +147,7 @@ class IALSRecommender(BaseRecommender):
         """
         scores = self.get_score_single_user(user_string, keep_indices)
         if scores is None:
-            original_indices = self._get_toppop_keep(keep_indices)
+            original_indices = self._get_toppop_keep(keep_indices)[:top_k]
         else:
             rank = self.get_topk_indices(scores, top_k)
             original_indices = keep_indices[rank]
