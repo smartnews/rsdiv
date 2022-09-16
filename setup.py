@@ -16,7 +16,7 @@ install_requires = (
         "scikit-learn>=1.1.1",
         "matplotlib>=3.5.2",
         "plotly>=5.6.0",
-        "implicit>=0.6.0",
+        "implicit==0.6.1",
     ],
 )
 
