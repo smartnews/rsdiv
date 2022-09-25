@@ -7,7 +7,9 @@ class RankingDistance:
     """Distance between ordered lists."""
 
     @classmethod
-    def common_at_k(cls, source_list: List, target_list: List, truncate_at: int) -> int:
+    def common_at_k(
+        cls, source_list: List, target_list: List, truncate_at: int
+    ) -> float:
         """Calculate the common elements for two ordered lists.
 
         Args:
@@ -16,11 +18,11 @@ class RankingDistance:
             truncate_at (int): Until which position the numbers would be considered.
 
         Returns:
-            int: The number of common elements.
+            float: Ratio for the  number of common elements.
         """
         source_set = set(source_list[:truncate_at])
         target_set = set(target_list[:truncate_at])
-        return len(source_set.intersection(target_set))
+        return len(source_set.intersection(target_set)) // truncate_at
 
     @classmethod
     def average_common_at_k(
