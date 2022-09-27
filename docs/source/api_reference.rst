@@ -23,6 +23,7 @@ Evaluation
     :nosignatures:
 
     RankingMetrics
+    RankingDistance
     DiversityMetrics
     CosineRelevanceMetric
     InnerProductRelevanceMetric
