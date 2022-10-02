@@ -9,13 +9,13 @@ with (SETUP_DIRECTORY / "README.md").open() as ifs:
 
 install_requires = (
     [
-        "numpy>=1.23.1",
-        "pandas>=1.4.3",
-        "scipy>=1.8.1",
+        "numpy>=1.23.3",
+        "pandas>=1.5.0",
+        "scipy>=1.9.1",
         "lightfm>=1.16",
-        "scikit-learn>=1.1.1",
-        "matplotlib>=3.5.2",
-        "plotly>=5.6.0",
+        "scikit-learn>=1.1.2",
+        "matplotlib>=3.6.0",
+        "plotly>=5.10.0",
         "implicit==0.6.1",
     ],
 )
