@@ -1,3 +1,4 @@
+from .aggregation import *
 from .dataset import *
 from .diversity import *
 from .embedding import *
