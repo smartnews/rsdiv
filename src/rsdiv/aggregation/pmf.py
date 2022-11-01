@@ -4,6 +4,8 @@ import numpy as np
 
 
 class PMF:
+    """Probability mass function for re-ranking matrix."""
+
     def __init__(self, rank_lists: List[List[str]], top_k: int) -> None:
         """Constructor for PMF instance.
 
