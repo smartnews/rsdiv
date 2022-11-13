@@ -72,3 +72,14 @@ Encoding
 
     BaseEncoder
     GeoEncoder
+
+.. currentmodule:: rsdiv.aggregation
+
+Aggregation
+-----------
+.. autosummary::
+    :toctree: api_reference
+    :nosignatures:
+
+    RankProduct
+    PMF
