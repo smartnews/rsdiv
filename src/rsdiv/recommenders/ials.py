@@ -81,11 +81,11 @@ class IALSRecommender(BaseRecommender):
         if user_string in self.user_array:
             user_id = self.get_user_id(user_string)
             ids, _ = self.ials.recommend(user_id, self.train_mat[user_id], N=top_k)
-            indice = np.asarray(ids)
+            indices = np.asarray(ids)
         else:
             rank, _ = self.toppop
-            indice = rank[:top_k]
-        return [self.item_array[index] for index in indice]
+            indices = rank[:top_k]
+        return [self.item_array[index] for index in indices]
 
     def auc_score(self, top_k: int = 100) -> float:
         return float(AUC_at_k(self.ials, self.train_mat, self.test_mat, K=top_k))
@@ -148,12 +148,12 @@ class IALSRecommender(BaseRecommender):
         """
         scores = self.get_score_single_user(user_string, keep_indices)
         if scores is None:
-            indice, scores = self._get_toppop(keep_indices)
-            return (indice[:top_k], scores[:top_k])
+            indices, scores = self._get_toppop(keep_indices)
+            return (indices[:top_k], scores[:top_k])
         else:
             rank = self.get_topk_indices(scores, top_k)
-            indice = keep_indices[rank]
-            return (self.item_array[indice], scores[indice])
+            indices = keep_indices[rank]
+            return (self.item_array[indices], scores[indices])
 
     def predict(
         self,
