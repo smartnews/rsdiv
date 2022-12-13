@@ -78,13 +78,14 @@ class IALSRecommender(BaseRecommender):
         Returns:
             List: a list of recommended item ids.
         """
-        if user_string in self.user_list:
+        if user_string in self.user_array:
             user_id = self.get_user_id(user_string)
             ids, _ = self.ials.recommend(user_id, self.train_mat[user_id], N=top_k)
             indice = np.asarray(ids)
         else:
-            indice = self.toppop[:top_k]
-        return [self.item_list[index] for index in indice]
+            rank, _ = self.toppop
+            indice = rank[:top_k]
+        return [self.item_array[index] for index in indice]
 
     def auc_score(self, top_k: int = 100) -> float:
         return float(AUC_at_k(self.ials, self.train_mat, self.test_mat, K=top_k))
@@ -132,7 +133,7 @@ class IALSRecommender(BaseRecommender):
         user_string: str,
         keep_indices: np.ndarray,
         top_k: int,
-    ) -> np.ndarray:
+    ) -> Tuple[np.ndarray, np.ndarray]:
         """Get the recommended item ids for a given user id.
 
         Args:
@@ -141,18 +142,18 @@ class IALSRecommender(BaseRecommender):
             top_k (int): Top-k items to be recommended.
 
         Returns:
-            np.ndarray:
-                Recommended items ids.
+            Tuple[np.ndarray, np.ndarray]:
+                Recommended items ids and the corresponding scores.
                 Return `toppop` for new users.
         """
         scores = self.get_score_single_user(user_string, keep_indices)
         if scores is None:
-            original_indices = self._get_toppop_keep(keep_indices)[:top_k]
+            indice, scores = self._get_toppop(keep_indices)
+            return (indice[:top_k], scores[:top_k])
         else:
             rank = self.get_topk_indices(scores, top_k)
-            original_indices = keep_indices[rank]
-        topk_items = np.asarray([self.item_list[index] for index in original_indices])
-        return topk_items
+            indice = keep_indices[rank]
+            return (self.item_array[indice], scores[indice])
 
     def predict(
         self,

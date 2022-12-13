@@ -5,6 +5,7 @@ import numpy as np
 import pandas as pd
 from scipy import sparse as sps
 from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import minmax_scale
 
 R = TypeVar("R", bound="BaseRecommender")
 
@@ -39,7 +40,7 @@ class BaseRecommender(metaclass=ABCMeta):
         item_features: Optional[pd.DataFrame] = None,
         toppop_keep: Optional[np.ndarray] = None,
     ) -> None:
-        self.df_interaction, self.user_list, self.item_list = self.get_interaction(
+        self.df_interaction, self.user_array, self.item_array = self.get_interaction(
             df_interaction
         )
         self.n_users, self.n_items = self.df_interaction.max()[:2] + 1
@@ -49,11 +50,11 @@ class BaseRecommender(metaclass=ABCMeta):
         self.test_size = test_size
         self.random_split = random_split
         self.train_mat, self.test_mat = self.process_interaction()
-        self.toppop: np.ndarray = self._get_toppop_keep(toppop_keep)
+        self.toppop = self._get_toppop(toppop_keep)
 
     def get_interaction(
         self, df_interaction: pd.DataFrame
-    ) -> Tuple[pd.DataFrame, List, List]:
+    ) -> Tuple[pd.DataFrame, np.ndarray, np.ndarray]:
         """The converter for input dataframe
 
         Args:
@@ -68,9 +69,9 @@ class BaseRecommender(metaclass=ABCMeta):
         item_cat = pd.Categorical(dataframe["itemId"])
         dataframe["userId"] = user_cat.codes
         dataframe["itemId"] = item_cat.codes
-        user_list = list(user_cat.categories)
-        item_list = list(item_cat.categories)
-        return dataframe, user_list, item_list
+        user_array = np.array(list(user_cat.categories))
+        item_array = np.array(list(item_cat.categories))
+        return dataframe, user_array, item_array
 
     def process_interaction(self) -> Tuple[sps.coo_matrix, Optional[sps.coo_matrix]]:
         dataframe = self.df_interaction
@@ -101,7 +102,7 @@ class BaseRecommender(metaclass=ABCMeta):
         return train_mat, test_mat
 
     def clean_items(self) -> pd.DataFrame:
-        invmap = {v: k for k, v in enumerate(self.item_list)}
+        invmap = {v: k for k, v in enumerate(self.item_array)}
         self.items["encodes"] = self.items["itemId"].apply(
             lambda x: self._encode(x, invmap)
         )
@@ -134,15 +135,33 @@ class BaseRecommender(metaclass=ABCMeta):
     ) -> np.ndarray:
         raise NotImplementedError("predict must be implemented.")
 
-    def _get_toppop_keep(self, toppop_keep: Optional[np.ndarray]) -> np.ndarray:
-        """Get the top popular indices for items.
+    @staticmethod
+    def _normalize_scores(
+        scores: np.ndarray, feature_range: Tuple[int, int] = (0, 1)
+    ) -> np.ndarray:
+        """Get the normalized scores.
+
+        Args:
+            scores (np.ndarray): Scores in original scale.
+            feature_range (Tuple[int, int], optional): Defaults to (0, 1).
+
+        Returns:
+            np.ndarray: Normalized scores.
+        """
+        scores = minmax_scale(scores, feature_range=feature_range, axis=0, copy=True)
+        return scores
+
+    def _get_toppop(
+        self, toppop_keep: Optional[np.ndarray]
+    ) -> Tuple[np.ndarray, np.ndarray]:
+        """Get the top popular indices and scores for items.
 
         Args:
             toppop_keep (Optional[np.ndarray]): The indices of items to be kept.
 
         Returns:
-            np.ndarray:
-                Top popular indices of items.
+            Tuple[np.ndarray, np.ndarray]:
+                Top popular indices and the scores of items.
                 Return all top popular if `toppop_keep` is not assigned.
         """
         scores = np.asarray(self.train_mat.sum(axis=0)).ravel()
@@ -150,9 +169,13 @@ class BaseRecommender(metaclass=ABCMeta):
             mask = np.ones(scores.shape[0], dtype=bool)
             mask[toppop_keep] = False
             scores[mask] = 0
-            return (-scores).argsort()[: len(toppop_keep)]
+            scores = self._normalize_scores(scores)
+            rank = (-scores).argsort()[: len(toppop_keep)]
+            return (rank, scores[rank])
         else:
-            return (-scores).argsort()
+            rank = (-scores).argsort()
+            scores = self._normalize_scores(scores)
+            return (rank, scores[rank])
 
     def predict_for_userId(self, user_id: int) -> np.ndarray:
         user_ids: np.ndarray = np.full(self.n_items, user_id)
@@ -195,7 +218,7 @@ class BaseRecommender(metaclass=ABCMeta):
                 Return `None` it not in training set.
         """
         try:
-            user_id = self.user_list.index(user_string)
+            user_id: Optional[int] = np.where(self.user_array == user_string)[0][0]
         except:
             user_id = None
         return user_id
@@ -212,7 +235,7 @@ class BaseRecommender(metaclass=ABCMeta):
                 Return `None` it not in training set.
         """
         try:
-            item_id = self.item_list.index(item_string)
+            item_id: Optional[int] = np.where(self.item_array == item_string)[0][0]
         except:
             item_id = None
         return item_id
