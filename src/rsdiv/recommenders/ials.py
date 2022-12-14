@@ -153,7 +153,7 @@ class IALSRecommender(BaseRecommender):
         else:
             rank = self.get_topk_indices(scores, top_k)
             indices = keep_indices[rank]
-            return (self.item_array[indices], scores[indices])
+            return (self.item_array[indices], scores[rank])
 
     def predict(
         self,
