@@ -22,7 +22,7 @@ class GeoEncoder(BaseEncoder):
         super().__init__()
         self.encoder, self.geo_county_dict = self.read_source()
         self.coord: List[np.ndarray] = self.encoder.coord.to_list()
-        self.index: pd.Index = pd.Index(self.encoder["index"])
+        self.tree = spatial.KDTree(self.coord)
 
     def read_source(self) -> Tuple[pd.DataFrame, Dict]:
         """Parse the location information from `geojson-counties-fips.json`.
@@ -43,7 +43,7 @@ class GeoEncoder(BaseEncoder):
             geo_county_dict[id] = [coord, name, lsad]
         dataframe = pd.DataFrame.from_dict(
             geo_county_dict, orient="index", columns=["coord", "name", "lstd"]
-        ).reset_index()
+        ).rename_axis("index")
         return (dataframe, geo_county_dict)
 
     def encoding_single(self, org: Union[List, str]) -> Union[int, str]:
@@ -55,8 +55,7 @@ class GeoEncoder(BaseEncoder):
         Returns:
             Union[int, str]: the coding corresponds to the given target.
         """
-        tree = spatial.KDTree(self.coord)
-        return str(self.index[int(tree.query(org)[1])])
+        return str(self.encoder.index[int(self.tree.query(org)[1])])
 
     def encoding_series(self, series: pd.Series) -> pd.Series:
         """Encoding for the series of locations.
@@ -67,7 +66,7 @@ class GeoEncoder(BaseEncoder):
         Returns:
             pd.Series: the corresponding series of locations.
         """
-        encodings = pd.Series(series.apply(lambda x: self.encoding_single(x)))
+        encodings = series.apply(self.encoding_single)
         return encodings
 
     def draw_geo_graph(
