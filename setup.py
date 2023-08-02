@@ -17,6 +17,7 @@ install_requires = (
         "matplotlib>=3.6.0",
         "plotly>=5.10.0",
         "implicit==0.6.2",
+        "tqdm==4.65.0"
     ],
 )
 
