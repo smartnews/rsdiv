@@ -17,19 +17,6 @@ class FastTextEmbedder(BaseEmbedder):
         MAPPER: Dict[str, np.ndarray] = pkl.loads(EMB_PATH)
 
     @classmethod
-    def _l2_norm(cls, vector: np.ndarray) -> float:
-        """Internal method to calculate the normalize of a given vector.
-
-        Args:
-            vector (np.ndarray): target vector to be normalized.
-
-        Returns:
-            float: the l2 norm value for the given vector.
-        """
-        norm_val: float = np.sqrt(np.sum(vector**2))
-        return norm_val
-
-    @classmethod
     def embedding_norm(cls, org: str) -> np.ndarray:
         """Normalize a given vector.
 
@@ -40,9 +27,9 @@ class FastTextEmbedder(BaseEmbedder):
             np.ndarray: normalized vector.
         """
         vector: np.ndarray = cls.embedding_single(org)
-        norm_val: float = cls._l2_norm(vector)
+        norm_val: float = np.linalg.norm(vector)
         if norm_val:
-            embed: np.ndarray = vector * (1.0 / norm_val)
+            embed: np.ndarray = vector / norm_val
             return embed
         else:
             return vector
@@ -57,6 +44,4 @@ class FastTextEmbedder(BaseEmbedder):
         Returns:
             np.ndarray: normalized vector.
         """
-        emb_list: np.ndarray = np.asarray([cls.embedding_norm(item) for item in org])
-        emb_norm: np.ndarray = np.mean(emb_list, axis=0)
-        return emb_norm
+        return np.mean([cls.embedding_norm(item) for item in org], axis=0)
