@@ -1,5 +1,4 @@
 from typing import Optional
-
 import numpy as np
 import pandas as pd
 
@@ -30,12 +29,10 @@ class RankProduct:
                 The rank product scores for each item, the larger the more preferable.
                 Laplacian smoothing is applied to avoid zeros.
         """
-        num_weights: int = len(self.multi_scores)
-        if weights:
-            power = weights.reshape(num_weights, -1)
-        else:
-            power = np.ones([num_weights, 1])
-        ranks: np.ndarray = np.argsort(np.argsort(self.multi_scores)) + 1
-        ranks = ranks**power
-        rp_scores = np.asarray(ranks.prod(axis=0) ** (1.0 / power.sum()))
-        return rp_scores
+        if weights is None:
+            weights = np.ones(len(self.multi_scores.columns))
+
+        ranks = self.multi_scores.apply(lambda x: x.rank(method="min")).apply(lambda x: x**weights)
+        rp_scores = np.prod(ranks, axis=1) ** (1.0 / weights.sum())
+
+        return rp_scores.values
