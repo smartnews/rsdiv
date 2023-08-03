@@ -164,10 +164,9 @@ class IALSRecommender(BaseRecommender):
     ) -> np.ndarray:
         user_factors = self.ials.user_factors[user_ids]
         item_factors = self.ials.item_factors[item_ids]
-        predict_array: np.ndarray = np.asarray(
-            [user @ item for user, item in zip(user_factors, item_factors)]
-        )
+        predict_array = np.sum(user_factors * item_factors, axis=1)
         return predict_array
+
 
     def rerank_preprocess(
         self, user_id: int, truncate_at: int, category_col: str, embedding_col: str
@@ -176,8 +175,9 @@ class IALSRecommender(BaseRecommender):
         category = item_clean[category_col].to_list()
         embedding = np.stack(item_clean[embedding_col])
 
-        org_rank = self.recommend([user_id])[0][0]
-        org_scores = self.recommend([user_id])[1][0]
+        org_rank, org_scores = self.recommend([user_id])
+        org_rank = org_rank[0]
+        org_scores = org_scores[0]
 
         relevance_scores = org_scores[:truncate_at]
         org_select = org_rank[:truncate_at]
@@ -185,3 +185,4 @@ class IALSRecommender(BaseRecommender):
         similarity_matrix = similarity_scores @ similarity_scores.T
 
         return (org_select, category, relevance_scores, similarity_matrix)
+
