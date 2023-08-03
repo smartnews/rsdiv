@@ -32,7 +32,9 @@ class RankProduct:
         if weights is None:
             weights = np.ones(len(self.multi_scores.columns))
 
-        ranks = self.multi_scores.apply(lambda x: x.rank(method="min")).apply(lambda x: x**weights)
+        ranks = self.multi_scores.apply(lambda x: x.rank(method="min")).apply(
+            lambda x: x**weights
+        )
         rp_scores = np.prod(ranks, axis=1) ** (1.0 / weights.sum())
 
         return rp_scores.values

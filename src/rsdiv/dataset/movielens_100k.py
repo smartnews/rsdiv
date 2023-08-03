@@ -54,7 +54,9 @@ class MovieLens100KDownLoader(BaseDownloader):
             + genres,
         )
         df_items["title"] = df_items["title"].str[:-7]
-        df_items["title"] = df_items["title"].apply(lambda x: x.split(",")[0] if "," in x else x)
+        df_items["title"] = df_items["title"].apply(
+            lambda x: x.split(",")[0] if "," in x else x
+        )
         df_items["release_date"] = pd.to_datetime(df_items.release_date)
         df_items["genres"] = df_items[genres] @ (df_items[genres].columns + "|")
         df_items["genres"] = df_items["genres"].apply(lambda x: x[:-1].split("|"))

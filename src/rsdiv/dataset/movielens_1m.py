@@ -46,6 +46,8 @@ class MovieLens1MDownLoader(BaseDownloader):
         )
         df_items["release_date"] = df_items["title"].str[-5:-1].astype("int")
         df_items["title"] = df_items["title"].str[:-7]
-        df_items["title"] = df_items["title"].apply(lambda x: x.split(",")[0] if "," in x else x)
+        df_items["title"] = df_items["title"].apply(
+            lambda x: x.split(",")[0] if "," in x else x
+        )
         df_items["genres"] = df_items["genres"].apply(lambda x: x.split("|"))
         return df_items

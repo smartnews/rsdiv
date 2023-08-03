@@ -39,7 +39,9 @@ class MaximalMarginalRelevance(BaseReranker):
         for _ in range(k - 1):
             ma_similarity_scores[new_selection] = ma.masked
             max_similarity_scores = ma_similarity_scores.max(axis=1)
-            scores = self.lbd * quality_scores - (1.0 - self.lbd) * max_similarity_scores
+            scores = (
+                self.lbd * quality_scores - (1.0 - self.lbd) * max_similarity_scores
+            )
 
             new_selection = scores.argmax().item()
             selected_ind.append(new_selection)

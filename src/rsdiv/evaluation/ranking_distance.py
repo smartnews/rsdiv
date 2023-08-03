@@ -7,9 +7,7 @@ class RankingDistance:
     """Distance between ordered lists."""
 
     @staticmethod
-    def set_measure(
-        source_set: set, target_set: set, truncate_at: int
-    ) -> float:
+    def set_measure(source_set: set, target_set: set, truncate_at: int) -> float:
         """Calculate the common elements for two ordered sets.
 
         Args:
@@ -40,8 +38,7 @@ class RankingDistance:
         source_set = set(source_list)
         target_set = set(target_list)
         for depth in range(1, truncate_at + 1):
-            average_common.append(
-                cls.set_measure(source_set, target_set, depth))
+            average_common.append(cls.set_measure(source_set, target_set, depth))
         return float(np.mean(average_common))
 
     @classmethod
@@ -65,5 +62,5 @@ class RankingDistance:
         weight = 1 - decay
         for depth in range(1, truncate_at + 1):
             rbo += weight * cls.set_measure(source_set, target_set, depth)
-            weight *= decay 
+            weight *= decay
         return rbo

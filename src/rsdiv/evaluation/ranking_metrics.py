@@ -51,7 +51,7 @@ class RankingMetrics:
         assert (
             position <= recommended_relevance.shape[1]
         ), "position should be smaller than the number of items recommended!"
-        
+
         recommended_relevance = recommended_relevance[:, :position]
         cum_sum = np.cumsum(recommended_relevance, axis=1)
 

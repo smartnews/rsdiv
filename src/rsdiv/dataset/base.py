@@ -4,6 +4,7 @@ from typing import Optional, Union
 from urllib.request import urlretrieve
 import zipfile
 
+
 class BaseDownloader(metaclass=ABCMeta):
     """Base downloader for all Movielens datasets."""
 
@@ -19,7 +20,7 @@ class BaseDownloader(metaclass=ABCMeta):
         if self.zip_path.exists():
             return
 
-        zip_file_name = self.zip_path.with_suffix('.zip')
+        zip_file_name = self.zip_path.with_suffix(".zip")
         urlretrieve(self.DOWNLOAD_URL, filename=zip_file_name)
 
         with zipfile.ZipFile(zip_file_name) as zf:

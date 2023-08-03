@@ -27,7 +27,9 @@ class DiversityMetrics:
         return np.asarray(pd.Series(flatten_items).value_counts())
 
     @staticmethod
-    def _gini_coefficient(categories_histogram: np.ndarray, histogram_sum: float, sort: bool = True) -> float:
+    def _gini_coefficient(
+        categories_histogram: np.ndarray, histogram_sum: float, sort: bool = True
+    ) -> float:
         if sort:
             categories_histogram = np.sort(categories_histogram)[::-1]
         count: int = categories_histogram.shape[0]

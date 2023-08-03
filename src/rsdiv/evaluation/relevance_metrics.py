@@ -52,9 +52,22 @@ class CosineRelevanceMetric(RelevanceMetricsBase):
     def get_similarity_scores(query: np.ndarray, candidates: np.ndarray) -> np.ndarray:
         eps = 1e-8  # Small constant to avoid division by zero
         return (
-            query @ candidates.T
-            / (np.linalg.norm(query, axis=0 if len(query.shape) == 1 else 1, keepdims=True) + eps)
-            / (np.linalg.norm(candidates, axis=0 if len(candidates.shape) == 1 else 1, keepdims=True).T + eps)
+            query
+            @ candidates.T
+            / (
+                np.linalg.norm(
+                    query, axis=0 if len(query.shape) == 1 else 1, keepdims=True
+                )
+                + eps
+            )
+            / (
+                np.linalg.norm(
+                    candidates,
+                    axis=0 if len(candidates.shape) == 1 else 1,
+                    keepdims=True,
+                ).T
+                + eps
+            )
         ).squeeze()
 
 

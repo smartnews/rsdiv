@@ -18,7 +18,11 @@ class SlidingSpectrumDecomposition(BaseReranker):
         selected_norm = norm(selected_emb)
         if selected_norm > 1e-7:  # treat new selection as 0 vector if it's too small
             selected_emb /= selected_norm
-            np.subtract(embeddings, np.outer(embeddings @ selected_emb, selected_emb), out=embeddings)
+            np.subtract(
+                embeddings,
+                np.outer(embeddings @ selected_emb, selected_emb),
+                out=embeddings,
+            )
 
     def rerank(
         self,

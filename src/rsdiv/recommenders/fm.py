@@ -4,6 +4,7 @@ from lightfm.evaluation import precision_at_k
 from scipy import sparse as sps
 from .base import BaseRecommender
 
+
 class FMRecommender(BaseRecommender):
     """
     FM recommender based on `LightFM`.
@@ -26,7 +27,7 @@ class FMRecommender(BaseRecommender):
         item_alpha: float = 0,
         user_alpha: float = 0,
         loss: str = "bpr",
-        epochs: int = 30
+        epochs: int = 30,
     ):
         super().__init__(interaction, items, test_size, random_split)
         self.epochs = epochs

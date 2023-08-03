@@ -167,7 +167,6 @@ class IALSRecommender(BaseRecommender):
         predict_array = np.sum(user_factors * item_factors, axis=1)
         return predict_array
 
-
     def rerank_preprocess(
         self, user_id: int, truncate_at: int, category_col: str, embedding_col: str
     ) -> Tuple:
@@ -185,4 +184,3 @@ class IALSRecommender(BaseRecommender):
         similarity_matrix = similarity_scores @ similarity_scores.T
 
         return (org_select, category, relevance_scores, similarity_matrix)
-
