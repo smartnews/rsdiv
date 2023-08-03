@@ -22,24 +22,24 @@ class DiversityMetrics:
     ) -> np.ndarray:
         first_element = next(iter(items))
         if isinstance(first_element, Sequence) and not isinstance(first_element, str):
-            items = chain(*items)
+            items = chain.from_iterable(items)
         flatten_items = list(items)
         return np.asarray(pd.Series(flatten_items).value_counts())
 
     @staticmethod
-    def _gini_coefficient(categories_histogram: np.ndarray, sort: bool = True) -> float:
+    def _gini_coefficient(categories_histogram: np.ndarray, histogram_sum: float, sort: bool = True) -> float:
         if sort:
             categories_histogram = np.sort(categories_histogram)[::-1]
         count: int = categories_histogram.shape[0]
         area: float = categories_histogram @ np.arange(1, count + 1)
-        area /= categories_histogram.sum() * count
+        area /= histogram_sum * count
         return 1 - 2 * area + 1 / count
 
     @staticmethod
     def _effective_catalog_size(
-        categories_histogram: np.ndarray, sort: bool = True
+        categories_histogram: np.ndarray, histogram_sum: float, sort: bool = True
     ) -> float:
-        pmf = categories_histogram / categories_histogram.sum()
+        pmf = categories_histogram / histogram_sum
         if sort:
             pmf.sort()
             pmf = pmf[::-1]
@@ -51,13 +51,24 @@ class DiversityMetrics:
         cls,
         items: Union[Iterable[Hashable], Iterable[Sequence[Hashable]]],
     ) -> float:
-        return cls._gini_coefficient(cls._get_histogram(items))
+        histogram = cls._get_histogram(items)
+        return cls._gini_coefficient(histogram, histogram.sum())
 
     @classmethod
     def effective_catalog_size(
         cls, items: Union[Iterable[Hashable], Iterable[Sequence[Hashable]]]
     ) -> float:
-        return cls._effective_catalog_size(cls._get_histogram(items))
+        histogram = cls._get_histogram(items)
+        return cls._effective_catalog_size(histogram, histogram.sum())
+
+    @classmethod
+    def shannon_index(
+        cls,
+        items: Union[Iterable[Hashable], Iterable[Sequence[Hashable]]],
+        base: Optional[float] = None,
+    ) -> float:
+        ent: float = entropy(cls._get_histogram(items), base=base)
+        return ent
 
     @classmethod
     def shannon_index(

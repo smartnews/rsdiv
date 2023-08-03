@@ -30,7 +30,7 @@ class RelevanceMetricsBase(ABC):
             slice_ = slice(-k, None)
         indices = np.argpartition(scores, partition_point, axis=1)[:, slice_]
         scores = np.take_along_axis(scores, indices, axis=1)
-        return np.squeeze(indices), np.squeeze(scores)
+        return indices.squeeze(), scores.squeeze()
 
     @classmethod
     def most_similar(
@@ -50,20 +50,12 @@ class CosineRelevanceMetric(RelevanceMetricsBase):
 
     @staticmethod
     def get_similarity_scores(query: np.ndarray, candidates: np.ndarray) -> np.ndarray:
-        return np.asarray(
-            np.squeeze(
-                query
-                @ candidates.T
-                / np.linalg.norm(
-                    query, axis=0 if len(query.shape) == 1 else 1, keepdims=True
-                )
-                / np.linalg.norm(
-                    candidates,
-                    axis=0 if len(candidates.shape) == 1 else 1,
-                    keepdims=True,
-                ).T
-            )
-        )
+        eps = 1e-8  # Small constant to avoid division by zero
+        return (
+            query @ candidates.T
+            / (np.linalg.norm(query, axis=0 if len(query.shape) == 1 else 1, keepdims=True) + eps)
+            / (np.linalg.norm(candidates, axis=0 if len(candidates.shape) == 1 else 1, keepdims=True).T + eps)
+        ).squeeze()
 
 
 class InnerProductRelevanceMetric(RelevanceMetricsBase):
@@ -71,4 +63,4 @@ class InnerProductRelevanceMetric(RelevanceMetricsBase):
 
     @staticmethod
     def get_similarity_scores(query: np.ndarray, candidates: np.ndarray) -> np.ndarray:
-        return np.asarray(query @ candidates.T)
+        return (query @ candidates.T).squeeze()
