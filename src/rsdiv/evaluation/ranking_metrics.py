@@ -27,17 +27,17 @@ class RankingMetrics:
         """Normalized Discounted Cumulative Gain."""
         assert position <= len(relevant_items) and position <= len(recommended_items)
 
-        top_scores = np.array(tuple(map(item2relevance, relevant_items)))
-        top_scores.sort()
-        top_scores = top_scores[: -position - 1 : -1]
+        top_scores = np.array(list(map(item2relevance, relevant_items)))
+        top_scores = np.sort(top_scores)[::-1][:position]
 
         recommended_scores = np.array(
-            tuple(map(item2relevance, recommended_items[:position]))
+            list(map(item2relevance, recommended_items[:position]))
         )
 
         if exponential:
             top_scores = 2**top_scores - 1
             recommended_scores = 2**recommended_scores - 1
+
         idcg = cls.DCG(top_scores)
         dcg = cls.DCG(recommended_scores)
         return dcg / idcg
@@ -51,9 +51,9 @@ class RankingMetrics:
         assert (
             position <= recommended_relevance.shape[1]
         ), "position should be smaller than the number of items recommended!"
+
         recommended_relevance = recommended_relevance[:, :position]
         cum_sum = np.cumsum(recommended_relevance, axis=1)
 
         ap = cum_sum * recommended_relevance / np.arange(1, position + 1)
-        map: float = np.mean(ap).item()
-        return map
+        return np.mean(ap).item()

@@ -1,9 +1,8 @@
-import os
-import zipfile
 from abc import ABCMeta
 from pathlib import Path
 from typing import Optional, Union
 from urllib.request import urlretrieve
+import zipfile
 
 
 class BaseDownloader(metaclass=ABCMeta):
@@ -13,18 +12,18 @@ class BaseDownloader(metaclass=ABCMeta):
     DEFAULT_PATH: str
 
     def __init__(self, zip_path: Optional[Union[Path, str]] = None):
-        if zip_path is None:
-            zip_path = self.DEFAULT_PATH
-        else:
-            zip_path = zip_path
-        self.zip_path = Path(zip_path)
+        self.zip_path = Path(zip_path or self.DEFAULT_PATH)
         if not self.zip_path.exists():
             self._retrieve()
 
     def _retrieve(self) -> None:
-        url: str = self.DOWNLOAD_URL
-        file_name: str = str(self.zip_path) + ".zip"
-        urlretrieve(url, filename=file_name)
-        with zipfile.ZipFile(file_name) as zf:
+        if self.zip_path.exists():
+            return
+
+        zip_file_name = self.zip_path.with_suffix(".zip")
+        urlretrieve(self.DOWNLOAD_URL, filename=zip_file_name)
+
+        with zipfile.ZipFile(zip_file_name) as zf:
             zf.extractall(self.zip_path.parent)
-        os.remove(file_name)
+
+        zip_file_name.unlink()
